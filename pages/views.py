@@ -12,3 +12,6 @@ def HomePage(request):
 def About(request):
     context={}
     return render(request, 'pages/about.html', context)
+
+
+

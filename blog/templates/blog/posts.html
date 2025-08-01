@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+<body>
+    {% block body %}
+        {% for post in posts_list %}
+        <div class="post-view">
+            <img src="" alt="{{ post.post_name }}" />
+            <div class="post-preview">
+                {{ post.post_preview }}...
+            </div>
+        </div>
+        {% endfor %}
+    {% endblock %}
+</body>
