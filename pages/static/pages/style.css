@@ -1,0 +1,86 @@
+/*
+SPACING SYSTEM (px)
+2 / 4 / 8 / 12 / 16 / 24 / 32 / 48 / 64 / 80 / 96 / 128
+
+FONT SIZE SYSTEM (px)
+10 / 12 / 14 / 16 / 18 / 20 / 24 / 30 / 36 / 44 / 52 / 62 / 74 / 86 / 98
+*/
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  font-family: 'Open Sans', sans-serif;
+  background-color: #FAFAFA;
+  color: #333;
+}
+.main-container {
+  width: 100%;           /* allow shrinking on small screens */
+  max-width: 1000px;     /* never grow wider than 1200px */
+  margin: 0 auto;        /* vertically 0, horizontally auto‐center */
+  padding: 0 1rem;       /* optional side padding on small screens */
+  box-sizing: border-box;/* include padding in the width calculation */
+}
+
+.nav-link {
+    color: #333;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: bold;
+}
+.header {
+  display: flex;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: #fff;
+  border-bottom: 1px solid #ddd;
+}
+
+.pages {
+  margin-left: auto;
+  display: flex;
+  gap: 1.7rem;  /* adjust to taste (e.g. 1rem, 2rem, etc.) */
+}
+
+
+.name{
+    font-weight: bold;
+    font-size:24px;
+}
+
+.navbar {
+    background-color: white;
+}
+.welcome {
+  display: flex;
+  width: 100%;
+}
+
+.hero{
+  position: relative;
+  max-height: 150px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-top: 48px;
+}
+
+.hero img{
+  width: 100%;
+  display: block;
+  border-radius: 8px; 
+}
+
+.hero-text {
+    margin-top: 16px;
+    margin-left: 80px;
+}
+
+.hero-text h1 {
+  margin: 0;
+  font-size: 30px;
+  font-weight: bold;
+}
+
