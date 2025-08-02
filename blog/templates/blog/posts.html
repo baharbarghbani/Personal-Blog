@@ -1,13 +1,9 @@
 {% extends "base.html" %}
-<body>
-    {% block body %}
+{% block body %}
+    <!-- <h1 class="posts-header">
+        Posts
+    </h1> -->
         {% for post in posts_list %}
-        <div class="post-view">
-            <img src="" alt="{{ post.post_name }}" />
-            <div class="post-preview">
-                {{ post.post_preview }}...
-            </div>
-        </div>
+        {% include "blog/post_card.html" with post=post %}
         {% endfor %}
-    {% endblock %}
-</body>
+{% endblock %}

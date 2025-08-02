@@ -1,0 +1,16 @@
+{% load static %}
+<div class="post-card">
+    {% if post.image %}
+    <div class="post-image">
+        <img src="{{ post.image.url }}" alt="{{ post.post_name }}" />
+    </div>
+    {% endif %}
+    <div class="post-text">
+        <h4 class="post-title">
+            {{ post.post_title }}
+        </h4>
+        <div class="post-preview">
+            {{ post.post_preview }}...
+        </div>
+    </div>
+</div>
