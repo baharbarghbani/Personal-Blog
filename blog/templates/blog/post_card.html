@@ -1,5 +1,5 @@
 {% load static %}
-<div class="post-card">
+<div class="post-card" data-url="{% url 'blog:detail' post.id %}">
     {% if post.image %}
     <div class="post-image">
         <img src="{{ post.image.url }}" alt="{{ post.post_name }}" />

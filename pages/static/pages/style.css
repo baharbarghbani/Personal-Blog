@@ -92,7 +92,7 @@ body {
   display: flex;
   align-items: flex-start;
   padding: 32px;
-  gap: 32px;
+  gap: 64px;
   background: #fff;
   border-radius: 12px;
   margin-bottom: 32px;

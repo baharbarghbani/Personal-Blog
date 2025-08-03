@@ -9,6 +9,16 @@
     <title>Personal Blog</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Open+Sans&display=swap" rel="stylesheet"/>
 </head>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.post-card[data-url]').forEach(card => {
+      card.addEventListener('click', () => {
+        window.location.href = card.getAttribute('data-url');
+      });
+    });
+  });
+</script>
+
 <body>
     <div class="main-container">
         <header class="header">
