@@ -1,1 +1,10 @@
 {% extends "base.html" %}
+{% block body %}
+<div class="post-detail">
+    <img src="{{ post.image.url }}" alt="post-{{ post.post_name }}"/>
+    <div class="post-content">
+        <h3 class="post-title">{{ post.post_title}}</h3>
+        <div class="content-text">{{ post.content }}</div>
+    </div>
+</div>
+{% endblock %}
