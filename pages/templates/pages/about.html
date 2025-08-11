@@ -1,13 +1,20 @@
 {% extends "base.html" %}
+{% load static %}
 <body>
     {% block body%}
         <div class="container about-container">
-            <div class="about-img">
-                <img />
+            <div class="about-first-parag">
+                <div class="about-img">
+                    <img src="{% static 'images/laptop-me.jpg' %}" alt="about me profile"/>
+                </div>
+                <div class="about-text">
+                    Hi. This is Bahar. This is my first ever django project I have ever developed.
+                    I'm so excited for it.
+                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptas aspernatur, tenetur delectus laborum explicabo architecto, vel culpa quidem nihil cumque illum ratione dignissimos. Iste, vitae provident officia soluta accusamus magni?
+                </div>
             </div>
             <div class="about-text">
-                Hi. This is Bahar. This is my first ever django project I have ever developed.
-                I'm so excited for it.
+                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Porro ad quis unde quas. Aliquid neque labore sint? Exercitationem, fuga dicta! Ex reprehenderit sed libero quas consectetur dolore voluptate eius laboriosam!
             </div>
             <div class="social-info">
 

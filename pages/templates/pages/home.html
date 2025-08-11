@@ -4,9 +4,15 @@
 <body>
     {% block body %}
         <div class="welcome">
-            <div class="about-me">
-                
-            </div>
+            <a class="about-me" href="{% url 'pages:about' %}">
+                <div class="about-me-img">
+                    <img src="{% static 'images/laptop-me.jpg' %}" alt="about me profile"/>
+                </div>
+                <div class="home-about">
+                    <p class="about-h-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Praesentium earum quia consequatur hic tempora rem inventore aut quisquam omnis amet commodi reprehenderit non illum, dolorem temporibus voluptates ratione ad dignissimos.</p>
+                </div>
+                <!-- <a href="{% url 'pages:about' %}" class="about-me-btn">More about me</a> -->
+            </a>
             <div class="hero">
                 <img src="{% static 'images/hero.jpg' %}" alt="hero image"/>
                 <div class="hero-text">
