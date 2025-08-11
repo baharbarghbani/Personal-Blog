@@ -1,5 +1,5 @@
 {% load static %}
-<a class="post-card" href="{% url 'blog:detail' post.id %}">
+<a class="container post-card" href="{% url 'blog:detail' post.id %}">
     {% if post.image %}
     <div class="post-image">
         <img src="{{ post.image.url }}" alt="{{ post.post_name }}" />
