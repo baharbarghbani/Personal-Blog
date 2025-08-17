@@ -79,6 +79,10 @@ body {
 .welcome {
   display: flex;
   width: 100%;
+  background: #fff;
+  margin-top: 48px;
+  border-radius: 8px;
+  justify-content: center;
 }
 
 .about-me{
@@ -87,9 +91,11 @@ body {
   max-width: 300px;
   margin-top: 48px;  
   margin-left: 48px;
+  margin-bottom: 48px;
   border-radius: 24px;
   text-decoration: none;
   color: inherit;
+
 }
 
 .about-me-img{
@@ -239,9 +245,9 @@ body {
   border-radius: 8px;
 }
 
-.social-info{
+/* .social-info{
 
-}
+} */
 
 .form-card {
   max-width: 720px;
@@ -349,5 +355,5 @@ body {
   color: var(--ring);
   border: var(--ring);
   border-radius: 16px;
-  
 }
+

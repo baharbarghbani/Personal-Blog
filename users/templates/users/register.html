@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static '/pages/style.css' %}"/>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Open+Sans&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="{% static '/users/users.css' %}">
+
+</head>
+
+<body class="main-container">
+    <div class="container register-card">
+        <form method="POST" class="reg-form-wrapper">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="reg-row">
+                    <label for="{{ field.id_for_label}}">{{ field.label }}</label>
+                    <div class="reg-input">
+                        {{ field }}
+                        {% for error in field.errors %} 
+                            <div class="form-error">
+                                {{ error }}
+                            </div> 
+                        {% endfor%}
+                    </div>
+                </div>
+            {% endfor %}
+            <button type="submit" class="form-btn">Signup</button>
+        </form>
+    </div>
+</body>

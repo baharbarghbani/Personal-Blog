@@ -1,0 +1,27 @@
+.register-card {
+    padding: 24px;
+    display: flex;
+    justify-content: center;
+    max-width: 500px;
+
+}
+
+.reg-form-wrapper {
+
+}
+
+.reg-input textarea,
+.reg-input input,
+.reg-input select {
+    width: 100%;
+    padding: 8px 16px;
+}
+
+.reg-row{
+    padding-bottom: 24px;
+}
+
+.reg-row label{
+    font-size: 12px;
+    padding-left: 8px;
+}
