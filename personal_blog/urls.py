@@ -22,7 +22,6 @@ from users import views as user_views
 from django.contrib.auth.views import LoginView, LogoutView
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('blog/', include('blog.urls')),
     path('', include('pages.urls')),
     path('blog/', include("blog.urls")),
     path("register/", user_views.register, name='register'),

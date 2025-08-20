@@ -1,16 +1,15 @@
+{% extends 'base.html' %}
 {% load static %}
+{% block body %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static '/pages/style.css' %}"/>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Open+Sans&display=swap" rel="stylesheet"/>
     <link rel="stylesheet" href="{% static '/users/users.css' %}">
 
 </head>
-
-<body class="main-container">
+<body class="register-body">
     <div class="container register-card">
         <form method="POST" class="reg-form-wrapper">
             {% csrf_token %}
@@ -27,7 +26,10 @@
                     </div>
                 </div>
             {% endfor %}
-            <button type="submit" class="form-btn">Signup</button>
+            <div class="form-submit">
+                <button type="submit" class="form-btn">Signup</button>
+            </div>
         </form>
     </div>
 </body>
+{% endblock %}

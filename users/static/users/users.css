@@ -1,13 +1,20 @@
 .register-card {
-    padding: 24px;
+    padding: 12px;
     display: flex;
     justify-content: center;
-    max-width: 500px;
-
+    align-items: center;
+    width: 500px;
+    height: 600px;
 }
 
 .reg-form-wrapper {
+    width: 80%;
+}
 
+.register-body {
+  display: grid;
+  min-height: 100vh;
+  margin: 0;
 }
 
 .reg-input textarea,
@@ -15,13 +22,38 @@
 .reg-input select {
     width: 100%;
     padding: 8px 16px;
+    border-radius: 4px;
+    border: 1px solid #e5e7eb;
+    font-size: 16px;
+    background: #fafafa;
+
+}
+
+.input-wrap input:focus,
+.input-wrap textarea:focus,
+.input-wrap select:focus{
+  border-color: #1c39bb;
+  box-shadow: 0 0 0 4px color-mix(in srgb, #1c39bb 20%, transparent);
+  background: #fff;
 }
 
 .reg-row{
-    padding-bottom: 24px;
+    padding-bottom: 48px;
 }
 
 .reg-row label{
-    font-size: 12px;
+    display: block;
+    font-size: 14px;
     padding-left: 8px;
+    margin-bottom: 8px;
+}
+
+
+.login-card{
+    padding: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 500px;
+    height: 400px;
 }
