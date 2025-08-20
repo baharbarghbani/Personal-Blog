@@ -1,6 +1,9 @@
 from django.shortcuts import render, redirect
 from .forms import RegisterForm, LoginForm
 from django.contrib import messages
+from django.contrib.auth.views import LoginView
+from django.contrib.auth.decorators import login_required
+from django.urls import reverse
 
 # Create your views here.
 def register(request):
@@ -17,14 +20,13 @@ def register(request):
 
 
         
-def login(request):
-    if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            # Handle login logic here
-            username = form.cleaned_data.get('username')
-            messages.success(request, f'Welcome back {username}!')
-            return redirect('home')  # Redirect to home or another page after login
-    else:
-        form = LoginForm()
-    return render(request, 'users/login.html', {'form': form})
+class Login(LoginView):
+    template_name = "users/login.html"
+    authentication_form = LoginForm
+
+    def get_success_url(self):
+        return reverse("user-home", kwargs={"username": self.request.user.username})
+
+@login_required
+def user_home(request, username):
+    return render(request, 'pages/home.html', {'username': username})

@@ -107,6 +107,11 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+AUTHENTICATION_BACKENDS = [
+    "users.backends.EmailBackend",                 # try email first
+    "django.contrib.auth.backends.ModelBackend",   # keep default
+]
+
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
@@ -135,4 +140,5 @@ DEFAULT_FROM_EMAIL = "no-reply@yourdomain.com"
 CONTACT_RECEIVER_EMAIL = "bahar.brqbni@gmail.com"
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # in developement
 
+LOGIN_REDIRECT_URL = 'pages:home'     # name of your homepage urlpattern
 
