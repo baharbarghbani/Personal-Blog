@@ -7,4 +7,19 @@
         <div class="content-text">{{ post.content }}</div>
     </div>
 </div>
+<br/><br/>
+
+{% if not post.comments.all %}
+    No comments yet...
+{% else %}
+    {% for comment in post.comments.all %}
+    <strong>
+        {{ comment.name }} - {{ comment.date_added }}
+    </strong>
+    <br/><br/>
+    {{ comment.body }}
+    <br/><br/>
+    {% endfor %}
+{% endif %}
+
 {% endblock %}

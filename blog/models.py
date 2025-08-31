@@ -7,4 +7,14 @@ class Post(models.Model):
     post_title = models.CharField(max_length=20, default="Post")
     post_preview = models.CharField(max_length=200, default="Preview")
     content = models.CharField(max_length=200)
+    date_posted = models.DateField(auto_now_add=True)
     image = models.ImageField(upload_to='post_images/', blank=True, null=True) # needs edit
+
+class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete = models.CASCADE, related_name="comments")
+    name = models.CharField(max_length=50)
+    body = models.TextField()
+    date_added = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return '%s - %s' % (self.post.post_title, self.name)
