@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from .models import Post
+from .forms import CommentForm
 
 def Posts(request):
     posts = Post.objects.all()
@@ -11,6 +12,7 @@ def Posts(request):
 def PostDetail(request, post_id):
     post = Post.objects.get(pk=post_id)
     context = {
-        "post": post
+        "post": post,
+        "form": CommentForm,
     }
     return render(request, "blog/post_detail.html", context)
