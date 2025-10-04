@@ -16,7 +16,7 @@ FONT SIZE SYSTEM (px)
   --text:#222;
   --muted:#6b7280;
   --border:#e5e7eb;
-  --ring:#1c39bb;           /* your Iranian blue */
+  --ring:#34A8E2;           /* your Iranian blue */
   --shadow:0 10px 30px rgba(0,0,0,.06);
   --radius:12px;
   --space:16px;
@@ -48,9 +48,13 @@ body {
   color: #333;
   text-decoration: none;
   font-size: 14px;
-  font-weight: bold;
+  font-weight: 800;
 }
 
+.nav-link:hover{
+  translate: 0 -1px;
+  font-weight: 1600;
+}
 .header {
   display: flex;
   height: 80px;
@@ -196,7 +200,8 @@ body {
 
 .post-detail{
   max-width: 700px;
-  margin: 48px auto;
+  margin: 64px auto;
+  margin-bottom: 16px;
   padding: 16px;
   background: #fff;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
@@ -307,7 +312,7 @@ body {
 .form-btn {
   padding: 12px 20px;
   border: 0;
-  border-radius: 10px;
+  border-radius: var(--radius);
   background: var(--ring);
   color: #fff;
   font-weight: 600;
@@ -357,3 +362,64 @@ body {
   border-radius: 16px;
 }
 
+.comment-container{
+  margin: 0px auto;
+  max-width: 700px;
+  margin-bottom: 72px;
+  display: flex;
+  flex-direction: column;
+  padding: 8px 24px 16px 24px;  
+  line-height: 64px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+  border-radius: 12px;
+
+}
+.no-comment-text{
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.comment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.comment-input {
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  font-size: 16px;
+  padding: 12px 16px;
+  resize: vertical;
+  background: #fafafa;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+}
+
+.comment-input:focus {
+  outline: none;
+  border-color: var(--ring);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--ring) 20%, transparent);
+  background: #fff;
+}
+
+.comment-btn {
+  width: fit-content;
+  align-self: flex-end;
+  padding: 10px 16px;
+  border-radius: 12px;
+  background: var(--ring);
+  font-weight: 600;
+  font-size: 14px;
+  box-shadow: 0 6px 12px rgba(52, 168, 226, 0.25);
+}
+
+.comment-btn:hover {
+  box-shadow: 0 8px 16px rgba(52, 168, 226, 0.3);
+}
+
+.comment-btn:active {
+  transform: translateY(1px);
+}
