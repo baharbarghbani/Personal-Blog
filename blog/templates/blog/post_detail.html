@@ -9,22 +9,47 @@
 </div>
 <br/><br/>
 
-{% if user.is_authenticated %}
-    {{ form }}
-{% else %}
-    <a href="{% url 'login'%}">Login to add comment</a>
-{% endif %}
+<div class="comment-container">
     {% if not post.comments.all %}
+    <p class="no-comment-text">
         No comments yet...
+    </p>
     {% else %}
-        {% for comment in post.comments.all %}
-        <strong>
-            {{ comment.name }} - {{ comment.date_added }}
-        </strong>
-        <br/><br/>
-        {{ comment.body }}
-        <br/><br/>
-        {% endfor %}
+    {% for comment in post.comments.all %}
+    <strong>
+        {{ comment.name }} - {{ comment.date_added }}
+    </strong>
+    <br/><br/>
+    {{ comment.body }}
+    <br/><br/>
+    {% endfor %}
     {% endif %}
+    {% if user.is_authenticated %}
+    <hr width="70%" size="2"  style="color: #e5e7eb; ">
+    <form method="post" class="comment-form">
+      {{ form }}
+      <button type="submit" class="form-btn comment-btn">Add a comment</button>
+    </form>
+    {% else %}
+    {% if not user.is_authenticated %}
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const textarea = document.querySelector(".comment-input");
+      if (textarea) {
+        textarea.addEventListener("focus", () => {
+          const proceed = confirm("You need to log in to add a comment. Go to login page?");
+          if (proceed) {
+            window.location.href = "{% url 'login' %}";
+          } else {
+            textarea.blur();
+          }
+        });
+      }
+    });
+    </script>
+{% endif %}
+    <!-- <a href="{% url 'login'%}">Login to add comment</a> -->
+    {% endif %}
+</div>
 
 {% endblock %}
