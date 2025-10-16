@@ -19,6 +19,8 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from users import views as userviews
+from django.contrib.auth import views as authentication_views # django built in view
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,5 +29,6 @@ urlpatterns = [
     path("users/", include("users.urls")),
     path("register/", userviews.register, name='register'),
     path("login/", userviews.Login.as_view(template_name='users/login.html'), name='login'),
+    path('logout/', authentication_views.LogoutView .as_view(template_name="users/logout.html"), name='logout'),
     path("home/<str:username>/", userviews.user_home, name='user-home'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
