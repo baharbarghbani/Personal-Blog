@@ -12,8 +12,8 @@ class Post(models.Model):
 
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete = models.CASCADE, related_name="comments")
-    name = models.CharField(max_length=50)
-    body = models.TextField()
+    name = models.CharField(max_length=50, default="Anonymous")
+    body = models.TextField(default="Comment")
     date_added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
