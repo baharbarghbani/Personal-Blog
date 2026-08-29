@@ -71,6 +71,30 @@ body {
   gap: 1.7rem;  /* adjust to taste (e.g. 1rem, 2rem, etc.) */
 }
 
+.logout-form {
+  display: inline-flex;
+}
+
+.nav-button {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.messages {
+  margin-top: 16px;
+}
+
+.message {
+  padding: 12px 16px;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  background: #f0fdf4;
+  color: #166534;
+}
+
 
 .name{
     font-weight: bold;

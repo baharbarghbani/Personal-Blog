@@ -1,9 +1,7 @@
 from django.shortcuts import render, redirect
 from .forms import RegisterForm, LoginForm
 from django.contrib import messages
-from django.contrib.auth.views import LoginView
-from django.contrib.auth.decorators import login_required
-from django.urls import reverse
+from django.contrib.auth.views import LoginView, LogoutView
 
 # Create your views here.
 def register(request):
@@ -18,15 +16,14 @@ def register(request):
         form = RegisterForm()
     return render(request, 'users/register.html', {'form': form})
 
+class Logout(LogoutView):
+    next_page = "pages:home"
+
+    def post(self, request, *args, **kwargs):
+        messages.success(request, "You have been logged out successfully.")
+        return super().post(request, *args, **kwargs)
 
         
 class Login(LoginView):
     template_name = "users/login.html"
     authentication_form = LoginForm
-
-    def get_success_url(self):
-        return reverse("user-home", kwargs={"username": self.request.user.username})
-
-@login_required
-def user_home(request, username):
-    return render(request, 'pages/home.html', {'username': username})

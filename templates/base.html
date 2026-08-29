@@ -5,8 +5,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static '/pages/style.css' %}"/>
-    <title>Personal Blog</title>
+    <link rel="stylesheet" href="{% static 'pages/style.css' %}"/>
+    {% block extra_css %}{% endblock %}
+    <title>{% block title %}Personal Blog{% endblock %}</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Open+Sans&display=swap" rel="stylesheet"/>
 </head>
 
@@ -19,8 +20,24 @@
                 <a class="nav-link" href="{% url 'pages:about' %}">About</a>
                 <a class="nav-link" href="{% url 'blog:posts' %}">Posts</a>
                 <a class="nav-link" href="{% url 'pages:contact' %}">Contact</a>
+                {% if user.is_authenticated %}
+                    <form class="logout-form" method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button class="nav-link nav-button" type="submit">Logout</button>
+                    </form>
+                {% else %}
+                    <a class="nav-link" href="{% url 'login' %}">Login</a>
+                    <a class="nav-link" href="{% url 'register' %}">Sign up</a>
+                {% endif %}
             </div>
         </header>
+        {% if messages %}
+            <div class="messages" aria-live="polite">
+                {% for message in messages %}
+                    <p class="message message-{{ message.tags|default:'info' }}">{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
         {% block body %}
         {% endblock %}
     </div>

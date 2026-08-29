@@ -2,7 +2,7 @@ from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth.models import User
 
 class EmailBackend(ModelBackend):
-    def authenticate(self, request, username = ..., password = ..., **kwargs):
+    def authenticate(self, request, username=None, password=None, **kwargs):
         if not username or not password:
             return None
         try: 

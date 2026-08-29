@@ -1,15 +1,10 @@
 {% extends 'base.html' %}
 {% load static %}
+{% block title %}Sign up | Bahar Barghbani{% endblock %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'users/users.css' %}">
+{% endblock %}
 {% block body %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static '/users/users.css' %}">
-
-</head>
-<body class="register-body">
     <div class="container register-card">
         <form method="POST" class="reg-form-wrapper">
             {% csrf_token %}
@@ -29,7 +24,7 @@
             <div class="form-submit">
                 <button type="submit" class="form-btn">Signup</button>
             </div>
+            <p class="auth-switch">Already have an account? <a href="{% url 'login' %}">Log in</a>.</p>
         </form>
     </div>
-</body>
 {% endblock %}

@@ -1,11 +1,10 @@
 {% extends 'base.html'%}
 {% load static %}
+{% block title %}Login | Bahar Barghbani{% endblock %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'users/users.css' %}">
+{% endblock %}
 {% block body %}
-<head>
-    <link rel="stylesheet" href="{% static '/users/users.css' %}">
-</head>
-
-<body class="register-body">
     <div class="container login-card">
         <form method="POST" class="reg-form-wrapper">
             {% csrf_token %}
@@ -25,9 +24,7 @@
             <div class="form-submit">
                 <button type="submit" class="form-btn">Login</button>
             </div>
+            <p class="auth-switch">New here? <a href="{% url 'register' %}">Create an account</a>.</p>
         </form>
     </div>
-</body>
-
-
 {% endblock %}
