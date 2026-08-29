@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 {% block body %}
 <div class="post-detail">
-    <img src="{{ post.image.url }}" alt="post-{{ post.post_name }}"/>
+    {% if post.image %}
+      <img src="{{ post.image.url }}" alt="{{ post.post_title }}"/>
+    {% endif %}
     <div class="post-content">
         <h3 class="post-title">{{ post.post_title}}</h3>
         <div class="content-text">{{ post.content }}</div>
@@ -27,28 +29,18 @@
     {% if user.is_authenticated %}
       <hr width="70%" size="2"  style="color: #e5e7eb; ">
       <form method="post" class="comment-form">
-        {{ form }}
+        {% csrf_token %}
+        {{ form.body }}
+        {% for error in form.body.errors %}
+          <div class="form-error">{{ error }}</div>
+        {% endfor %}
         <button type="submit" class="form-btn comment-btn">Add a comment</button>
       </form>
-      {% else %}
-    {% if not user.is_authenticated %}
-      <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const textarea = document.querySelector(".comment-input");
-        if (textarea) {
-          textarea.addEventListener("focus", () => {
-            const proceed = confirm("You need to log in to add a comment. Go to login page?");
-            if (proceed) {
-              window.location.href = "{% url 'login' %}";
-            } else {
-              textarea.blur();
-            }
-          });
-        }
-      });
-      </script>
-{% endif %}
-    <!-- <a href="{% url 'login'%}">Login to add comment</a> -->
+    {% else %}
+      <p class="comment-login-prompt">
+        <a href="{% url 'login' %}?next={{ request.path|urlencode }}">Log in</a>
+        to add a comment.
+      </p>
     {% endif %}
 </div>
 

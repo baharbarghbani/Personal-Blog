@@ -411,6 +411,16 @@ body {
   margin-top: 16px;
 }
 
+.comment-login-prompt {
+  line-height: 1.6;
+  padding: 16px 0;
+}
+
+.comment-login-prompt a {
+  color: #1677a7;
+  font-weight: 600;
+}
+
 .comment-input {
   width: 100%;
   border-radius: 8px;
