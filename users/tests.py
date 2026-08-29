@@ -27,6 +27,60 @@ class AuthenticationFlowTests(TestCase):
 
         self.assertRedirects(response, reverse("pages:home"))
 
+    def test_staff_login_is_redirected_to_admin_panel(self):
+        staff_user = User.objects.create_superuser(
+            username="admin",
+            email="admin@example.com",
+            password=self.password,
+        )
+
+        response = self.client.post(
+            reverse("login"),
+            {"username": staff_user.email, "password": self.password},
+        )
+
+        self.assertRedirects(response, reverse("admin:index"))
+
+    def test_staff_navigation_shows_admin_and_new_post_links(self):
+        staff_user = User.objects.create_superuser(
+            username="admin",
+            email="admin@example.com",
+            password=self.password,
+        )
+        self.client.force_login(staff_user)
+
+        response = self.client.get(reverse("pages:home"))
+
+        self.assertContains(
+            response,
+            'href="%s">Admin' % reverse("admin:index"),
+        )
+        self.assertContains(
+            response,
+            'href="%s">New post' % reverse("admin:blog_post_add"),
+        )
+
+    def test_regular_user_navigation_hides_admin_links(self):
+        self.client.force_login(self.user)
+
+        response = self.client.get(reverse("pages:home"))
+
+        self.assertNotContains(response, reverse("admin:blog_post_add"))
+
+    def test_staff_without_add_permission_does_not_see_new_post_link(self):
+        staff_user = User.objects.create_user(
+            username="editor",
+            email="editor@example.com",
+            password=self.password,
+            is_staff=True,
+        )
+        self.client.force_login(staff_user)
+
+        response = self.client.get(reverse("pages:home"))
+
+        self.assertContains(response, 'href="%s">Admin' % reverse("admin:index"))
+        self.assertNotContains(response, reverse("admin:blog_post_add"))
+
     def test_authenticated_navigation_uses_post_logout_form(self):
         self.client.force_login(self.user)
 

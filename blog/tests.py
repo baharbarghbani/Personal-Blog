@@ -90,3 +90,42 @@ class CommentFlowTests(TestCase):
 
         self.assertRedirects(response, self.detail_url)
         self.assertTrue(Comment.objects.filter(body="CSRF protected").exists())
+
+
+class AdminPostPanelTests(TestCase):
+    def setUp(self):
+        self.admin_user = User.objects.create_superuser(
+            username="admin",
+            email="admin@example.com",
+            password="a-secure-test-password",
+        )
+        self.add_post_url = reverse("admin:blog_post_add")
+
+    def test_admin_can_open_add_post_panel(self):
+        self.client.force_login(self.admin_user)
+
+        response = self.client.get(self.add_post_url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Add post")
+        self.assertContains(response, 'name="post_title"')
+        self.assertContains(response, 'name="post_preview"')
+        self.assertContains(response, 'name="content"')
+
+    def test_admin_can_create_post_from_panel(self):
+        self.client.force_login(self.admin_user)
+
+        response = self.client.post(
+            self.add_post_url,
+            {
+                "post_title": "Published from the admin",
+                "post_preview": "A preview created in the admin panel.",
+                "content": "The full post content.",
+                "_save": "Save",
+            },
+        )
+
+        self.assertRedirects(response, reverse("admin:blog_post_changelist"))
+        self.assertTrue(
+            Post.objects.filter(post_title="Published from the admin").exists()
+        )

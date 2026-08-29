@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .forms import RegisterForm, LoginForm
 from django.contrib import messages
 from django.contrib.auth.views import LoginView, LogoutView
+from django.urls import reverse
 
 # Create your views here.
 def register(request):
@@ -27,3 +28,11 @@ class Logout(LogoutView):
 class Login(LoginView):
     template_name = "users/login.html"
     authentication_form = LoginForm
+
+    def get_success_url(self):
+        requested_url = self.get_redirect_url()
+        if requested_url:
+            return requested_url
+        if self.request.user.is_staff:
+            return reverse("admin:index")
+        return super().get_success_url()
