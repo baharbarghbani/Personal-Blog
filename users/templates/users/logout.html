@@ -1,1 +1,3 @@
-<p>You have been logged out</p>
+{% if user.is_authenticated %}
+    <p>You have been logged out successfuly</p>
+{% endif %}
