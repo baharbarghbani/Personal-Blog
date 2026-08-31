@@ -1,9 +1,11 @@
 {% extends "base.html" %}
 {% block body %}
-    <!-- <h1 class="posts-header">
-        Posts
-    </h1> -->
-        {% for post in posts_list %}
+    {% for post in posts_list %}
         {% include "blog/post_card.html" with post=post %}
-        {% endfor %}
+    {% empty %}
+        <div class="container posts-empty-state">
+            <h1>No published posts yet</h1>
+            <p>New writing will appear here after it is published.</p>
+        </div>
+    {% endfor %}
 {% endblock %}

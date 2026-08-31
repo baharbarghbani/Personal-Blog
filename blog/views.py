@@ -3,20 +3,31 @@ from django.contrib.auth.views import redirect_to_login
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
-from .models import Post
 from .forms import CommentForm
+from .models import Post
 
 
-def Posts(request):
-    posts = Post.objects.all()
+def posts(request):
+    posts = Post.objects.published()
     context = {
-        'posts_list': posts,
+        "posts_list": posts,
     }
-    return render(request, 'blog/posts.html', context)
+    return render(request, "blog/posts.html", context)
 
 
-def PostDetail(request, post_id):
-    post = get_object_or_404(Post, pk=post_id)
+def legacy_post_detail(request, post_id):
+    posts = Post.objects.all() if request.user.is_staff else Post.objects.published()
+    post = get_object_or_404(posts, pk=post_id)
+
+    if request.method == "POST":
+        return post_detail(request, slug=post.slug)
+
+    return redirect(post, permanent=True)
+
+
+def post_detail(request, slug):
+    posts = Post.objects.all() if request.user.is_staff else Post.objects.published()
+    post = get_object_or_404(posts, slug=slug)
 
     if request.method == "POST" and not request.user.is_authenticated:
         return redirect_to_login(request.get_full_path(), reverse("login"))
@@ -31,7 +42,7 @@ def PostDetail(request, post_id):
             comment.name = display_name[:name_max_length]
             comment.save()
             messages.success(request, "Your comment has been added.")
-            return redirect("blog:detail", post_id=post.pk)
+            return redirect(post)
     else:
         form = CommentForm()
 

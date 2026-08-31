@@ -218,6 +218,33 @@ body {
   color: #444;
 }
 
+.post-date {
+  display: block;
+  margin-bottom: 12px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.posts-empty-state {
+  max-width: 700px;
+  padding: 48px;
+  text-align: center;
+}
+
+.posts-empty-state h1 {
+  margin-bottom: 12px;
+}
+
+.publication-notice {
+  max-width: 700px;
+  margin: 32px auto -32px;
+  padding: 12px 16px;
+  border: 1px solid #fcd34d;
+  border-radius: 8px;
+  background: #fffbeb;
+  color: #92400e;
+}
+
 .posts-header{
   padding: 24px;
 }

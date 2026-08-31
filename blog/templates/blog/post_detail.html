@@ -1,12 +1,26 @@
 {% extends "base.html" %}
 {% block body %}
+{% if user.is_staff and not post.is_public %}
+  <div class="publication-notice">
+    {% if post.is_scheduled %}
+      Staff preview: scheduled for {{ post.published_at|date:"F j, Y, P" }}.
+    {% else %}
+      Staff preview: this post is a draft and is not public.
+    {% endif %}
+  </div>
+{% endif %}
 <div class="post-detail">
     {% if post.image %}
       <img src="{{ post.image.url }}" alt="{{ post.post_title }}"/>
     {% endif %}
     <div class="post-content">
         <h3 class="post-title">{{ post.post_title}}</h3>
-        <div class="content-text">{{ post.content }}</div>
+        {% if post.published_at %}
+          <time class="post-date" datetime="{{ post.published_at|date:'c' }}">
+            {{ post.published_at|date:"F j, Y" }}
+          </time>
+        {% endif %}
+        <div class="content-text">{{ post.content|linebreaks }}</div>
     </div>
 </div>
 <br/><br/>
