@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Edit comment | Bahar Barghbani{% endblock %}
+{% block body %}
+  <div class="container comment-edit-card">
+    <h1>Edit comment</h1>
+    <p>Your changes will appear immediately.</p>
+    <form method="post" class="comment-form">
+      {% csrf_token %}
+      {{ form.body }}
+      {% for error in form.body.errors %}
+        <div class="form-error">{{ error }}</div>
+      {% endfor %}
+      <div class="comment-edit-actions">
+        <a href="{{ comment.post.get_absolute_url }}">Cancel</a>
+        <button type="submit" class="form-btn comment-btn">Save comment</button>
+      </div>
+    </form>
+  </div>
+{% endblock %}

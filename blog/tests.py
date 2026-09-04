@@ -34,22 +34,35 @@ class CommentFlowTests(TestCase):
 
         self.assertEqual(response.status_code, 404)
 
-    def test_guest_is_prompted_to_log_in(self):
+    def test_guest_sees_name_and_comment_fields(self):
         response = self.client.get(self.detail_url)
-        login_url = "%s?next=%s" % (reverse("login"), self.detail_url)
 
-        self.assertContains(response, 'href="%s"' % login_url)
-        self.assertNotContains(response, 'class="comment-input"')
+        self.assertContains(response, 'class="comment-name-input"')
+        self.assertContains(response, 'class="comment-input"')
 
-    def test_guest_post_redirects_to_login_without_creating_comment(self):
-        response = self.client.post(self.detail_url, {"body": "A comment"})
-
-        self.assertRedirects(
-            response,
-            "%s?next=%s" % (reverse("login"), self.detail_url),
-            fetch_redirect_response=False,
+    def test_guest_can_add_comment(self):
+        response = self.client.post(
+            self.detail_url,
+            {"name": "A reader", "body": "A guest comment"},
         )
-        self.assertFalse(Comment.objects.exists())
+
+        self.assertRedirects(response, self.detail_url)
+        comment = Comment.objects.get()
+        self.assertEqual(comment.post, self.post)
+        self.assertIsNone(comment.author)
+        self.assertEqual(comment.name, "A reader")
+        self.assertEqual(comment.body, "A guest comment")
+
+    def test_guest_without_name_is_saved_as_anonymous(self):
+        response = self.client.post(
+            self.detail_url,
+            {"name": "", "body": "An anonymous comment"},
+        )
+
+        self.assertRedirects(response, self.detail_url)
+        comment = Comment.objects.get()
+        self.assertIsNone(comment.author)
+        self.assertEqual(comment.name, "Anonymous")
 
     def test_authenticated_user_can_add_comment(self):
         self.client.force_login(self.user)
@@ -59,8 +72,17 @@ class CommentFlowTests(TestCase):
         self.assertRedirects(response, self.detail_url)
         comment = Comment.objects.get()
         self.assertEqual(comment.post, self.post)
+        self.assertEqual(comment.author, self.user)
         self.assertEqual(comment.name, self.user.username)
         self.assertEqual(comment.body, "A useful comment")
+
+    def test_authenticated_user_does_not_see_name_field(self):
+        self.client.force_login(self.user)
+
+        response = self.client.get(self.detail_url)
+
+        self.assertNotContains(response, 'class="comment-name-input"')
+        self.assertContains(response, 'class="comment-input"')
 
     def test_invalid_comment_is_not_saved_and_shows_error(self):
         self.client.force_login(self.user)
@@ -94,6 +116,132 @@ class CommentFlowTests(TestCase):
 
         self.assertRedirects(response, self.detail_url)
         self.assertTrue(Comment.objects.filter(body="CSRF protected").exists())
+
+
+class CommentManagementTests(TestCase):
+    def setUp(self):
+        self.author = User.objects.create_user(
+            username="author",
+            email="author@example.com",
+            password="a-secure-test-password",
+        )
+        self.other_user = User.objects.create_user(
+            username="reader",
+            email="reader@example.com",
+            password="a-secure-test-password",
+        )
+        self.admin_user = User.objects.create_superuser(
+            username="admin",
+            email="admin@example.com",
+            password="a-secure-test-password",
+        )
+        self.post = Post.objects.create(
+            post_title="Comments under management",
+            post_preview="A preview",
+            content="The post body",
+            status=Post.Status.PUBLISHED,
+        )
+        self.author_comment = Comment.objects.create(
+            post=self.post,
+            author=self.author,
+            name=self.author.username,
+            body="Author comment",
+        )
+        self.other_comment = Comment.objects.create(
+            post=self.post,
+            author=self.other_user,
+            name=self.other_user.username,
+            body="Other comment",
+        )
+        self.anonymous_comment = Comment.objects.create(
+            post=self.post,
+            name="Anonymous",
+            body="Anonymous comment",
+        )
+
+    def test_guest_sees_all_comments_immediately(self):
+        response = self.client.get(self.post.get_absolute_url())
+
+        self.assertContains(response, self.author_comment.body)
+        self.assertContains(response, self.other_comment.body)
+        self.assertContains(response, self.anonymous_comment.body)
+
+    def test_author_can_edit_comment_and_change_is_immediately_visible(self):
+        self.client.force_login(self.author)
+        edit_url = reverse("blog:comment-edit", args=[self.author_comment.pk])
+
+        response = self.client.post(edit_url, {"body": "Updated comment"})
+
+        self.assertRedirects(response, self.post.get_absolute_url())
+        self.author_comment.refresh_from_db()
+        self.assertEqual(self.author_comment.body, "Updated comment")
+        self.assertIsNotNone(self.author_comment.edited_at)
+
+        self.client.logout()
+        detail_response = self.client.get(self.post.get_absolute_url())
+        self.assertContains(detail_response, "Updated comment")
+
+    def test_user_cannot_edit_another_users_comment(self):
+        self.client.force_login(self.other_user)
+
+        response = self.client.post(
+            reverse("blog:comment-edit", args=[self.author_comment.pk]),
+            {"body": "Unauthorized edit"},
+        )
+
+        self.assertEqual(response.status_code, 404)
+        self.author_comment.refresh_from_db()
+        self.assertEqual(self.author_comment.body, "Author comment")
+
+    def test_guest_edit_redirects_to_login(self):
+        edit_url = reverse("blog:comment-edit", args=[self.author_comment.pk])
+
+        response = self.client.get(edit_url)
+
+        self.assertRedirects(
+            response,
+            "%s?next=%s" % (reverse("login"), edit_url),
+            fetch_redirect_response=False,
+        )
+
+    def test_author_can_delete_own_comment(self):
+        self.client.force_login(self.author)
+        delete_url = reverse("blog:comment-delete", args=[self.author_comment.pk])
+
+        response = self.client.post(delete_url)
+
+        self.assertRedirects(response, self.post.get_absolute_url())
+        self.assertFalse(Comment.objects.filter(pk=self.author_comment.pk).exists())
+
+    def test_user_cannot_delete_another_users_comment(self):
+        self.client.force_login(self.other_user)
+
+        response = self.client.post(
+            reverse("blog:comment-delete", args=[self.author_comment.pk])
+        )
+
+        self.assertEqual(response.status_code, 404)
+        self.assertTrue(Comment.objects.filter(pk=self.author_comment.pk).exists())
+
+    def test_staff_can_delete_any_comment(self):
+        self.client.force_login(self.admin_user)
+
+        response = self.client.post(
+            reverse("blog:comment-delete", args=[self.author_comment.pk])
+        )
+
+        self.assertRedirects(response, self.post.get_absolute_url())
+        self.assertFalse(Comment.objects.filter(pk=self.author_comment.pk).exists())
+
+    def test_delete_rejects_get_requests(self):
+        self.client.force_login(self.author)
+
+        response = self.client.get(
+            reverse("blog:comment-delete", args=[self.author_comment.pk])
+        )
+
+        self.assertEqual(response.status_code, 405)
+        self.assertTrue(Comment.objects.filter(pk=self.author_comment.pk).exists())
 
 
 class PublishingWorkflowTests(TestCase):

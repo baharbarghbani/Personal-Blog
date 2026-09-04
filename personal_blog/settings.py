@@ -149,5 +149,5 @@ DEFAULT_FROM_EMAIL = "no-reply@yourdomain.com"
 CONTACT_RECEIVER_EMAIL = "bahar.brqbni@gmail.com"
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # in developement
 
-LOGIN_REDIRECT_URL = 'pages:home'     # name of your homepage urlpattern
-
+LOGIN_URL = "login"
+LOGIN_REDIRECT_URL = "pages:home"

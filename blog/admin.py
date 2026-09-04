@@ -51,7 +51,15 @@ class PostAdmin(admin.ModelAdmin):
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ("name", "post", "date_added")
-    search_fields = ("name", "body", "post__post_title")
+    list_display = ("name", "post", "date_added", "edited_at")
     list_filter = ("date_added",)
+    search_fields = (
+        "name",
+        "body",
+        "post__post_title",
+        "author__username",
+        "author__email",
+    )
+    list_select_related = ("post", "author")
     ordering = ("-date_added",)
+    readonly_fields = ("date_added", "edited_at")
