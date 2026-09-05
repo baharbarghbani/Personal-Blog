@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}{{ research_item.title }} · Research{% endblock %}
+{% block meta_description %}{{ research_item.summary|truncatewords:28 }}{% endblock %}
+
+{% block body %}
+<article class="detail-page">
+    <a class="back-link" href="{% url 'pages:research' %}">← All research</a>
+    <header class="detail-header">
+        <div class="card-meta">
+            <span class="status status-{{ research_item.status }}">{{ research_item.get_status_display }}</span>
+            {% if research_item.field %}<span>{{ research_item.field }}</span>{% endif %}
+            {% if research_item.year %}<span>{{ research_item.year }}</span>{% endif %}
+        </div>
+        <h1>{{ research_item.title }}</h1>
+        <p class="detail-summary">{{ research_item.summary }}</p>
+    </header>
+
+    <div class="detail-layout">
+        <div class="detail-body prose">
+            <h2>Overview</h2>
+            {{ research_item.abstract|default:research_item.summary|linebreaks }}
+        </div>
+        <aside class="detail-sidebar">
+            <h2>Research details</h2>
+            <dl>
+                <div><dt>Status</dt><dd>{{ research_item.get_status_display }}</dd></div>
+                {% if research_item.venue %}<div><dt>Venue</dt><dd>{{ research_item.venue }}</dd></div>{% endif %}
+                {% if research_item.collaborators %}<div><dt>Collaborators</dt><dd>{{ research_item.collaborators }}</dd></div>{% endif %}
+                {% if research_item.year %}<div><dt>Year</dt><dd>{{ research_item.year }}</dd></div>{% endif %}
+            </dl>
+            <div class="detail-actions">
+                {% if research_item.publication_url %}<a class="button button-primary" href="{{ research_item.publication_url }}" rel="noreferrer">Read publication ↗</a>{% endif %}
+                {% if research_item.code_url %}<a class="button button-secondary" href="{{ research_item.code_url }}" rel="noreferrer">View code ↗</a>{% endif %}
+            </div>
+        </aside>
+    </div>
+</article>
+{% endblock %}

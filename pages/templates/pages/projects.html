@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Projects · {{ site_profile.full_name|default:"Bahar Barghbani" }}{% endblock %}
+{% block meta_description %}Selected technical and academic projects by {{ site_profile.full_name|default:"Bahar Barghbani" }}.{% endblock %}
+
+{% block body %}
+<header class="page-intro">
+    <div>
+        <p class="eyebrow">Projects</p>
+        <h1>Ideas made tangible</h1>
+        <p class="page-lede">A selection of software, experiments, and research-driven work—including the problem, process, and result.</p>
+    </div>
+</header>
+
+<section class="project-grid" aria-label="Projects">
+    {% for project in project_items %}
+        <article class="project-list-card">
+            <a class="project-visual" href="{{ project.get_absolute_url }}">
+                {% if project.image %}
+                    <img src="{{ project.image.url }}" alt="">
+                {% else %}
+                    <span>{{ forloop.counter|stringformat:"02d" }}</span>
+                {% endif %}
+            </a>
+            <div class="project-copy">
+                <h2><a href="{{ project.get_absolute_url }}">{{ project.title }}</a></h2>
+                <p>{{ project.summary }}</p>
+                {% if project.technology_list %}
+                    <ul class="tag-list compact" aria-label="Technologies">
+                        {% for technology in project.technology_list %}<li>{{ technology }}</li>{% endfor %}
+                    </ul>
+                {% endif %}
+                <div class="entry-links">
+                    <a href="{{ project.get_absolute_url }}">Case study <span aria-hidden="true">→</span></a>
+                    {% if project.live_url %}<a href="{{ project.live_url }}" rel="noreferrer">Live project ↗</a>{% endif %}
+                    {% if project.repository_url %}<a href="{{ project.repository_url }}" rel="noreferrer">Repository ↗</a>{% endif %}
+                </div>
+            </div>
+        </article>
+    {% empty %}
+        <div class="empty-state large">
+            <h2>Project case studies are being prepared</h2>
+            <p>Add projects from the Django admin panel, then explain the decisions and outcomes behind each one.</p>
+        </div>
+    {% endfor %}
+</section>
+{% endblock %}

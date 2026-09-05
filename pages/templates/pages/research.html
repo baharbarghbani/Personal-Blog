@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Research · {{ site_profile.full_name|default:"Bahar Barghbani" }}{% endblock %}
+{% block meta_description %}Research topics, publications, and ongoing work by {{ site_profile.full_name|default:"Bahar Barghbani" }}.{% endblock %}
+
+{% block body %}
+<header class="page-intro">
+    <div>
+        <p class="eyebrow">Research</p>
+        <h1>Questions I’m exploring</h1>
+        <p class="page-lede">Ongoing work, publications, and research directions—presented with enough context to understand why each question matters.</p>
+    </div>
+</header>
+
+<section class="entry-list" aria-label="Research entries">
+    {% for item in research_items %}
+        <article class="entry-card">
+            <div class="entry-index">{{ forloop.counter|stringformat:"02d" }}</div>
+            <div class="entry-main">
+                <div class="card-meta">
+                    <span class="status status-{{ item.status }}">{{ item.get_status_display }}</span>
+                    {% if item.field %}<span>{{ item.field }}</span>{% endif %}
+                    {% if item.year %}<span>{{ item.year }}</span>{% endif %}
+                </div>
+                <h2><a href="{{ item.get_absolute_url }}">{{ item.title }}</a></h2>
+                <p>{{ item.summary }}</p>
+                {% if item.venue %}<p class="entry-venue">{{ item.venue }}</p>{% endif %}
+                <div class="entry-links">
+                    <a href="{{ item.get_absolute_url }}">Overview <span aria-hidden="true">→</span></a>
+                    {% if item.publication_url %}<a href="{{ item.publication_url }}" rel="noreferrer">Publication ↗</a>{% endif %}
+                    {% if item.code_url %}<a href="{{ item.code_url }}" rel="noreferrer">Code ↗</a>{% endif %}
+                </div>
+            </div>
+        </article>
+    {% empty %}
+        <div class="empty-state large">
+            <h2>Research entries are being prepared</h2>
+            <p>Add your ongoing research, papers, and key questions from the Django admin panel.</p>
+        </div>
+    {% endfor %}
+</section>
+{% endblock %}

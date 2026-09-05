@@ -1,25 +1,156 @@
 {% extends "base.html" %}
 {% load static %}
 
-<body>
-    {% block body %}
-        <div class="welcome">
-            <a class="about-me" href="{% url 'pages:about' %}">
-                <div class="about-me-img">
-                    <img src="{% static 'images/laptop-me.jpg' %}" alt="about me profile"/>
-                </div>
-                <div class="home-about">
-                    <p class="about-h-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Praesentium earum quia consequatur hic tempora rem inventore aut quisquam omnis amet commodi reprehenderit non illum, dolorem temporibus voluptates ratione ad dignissimos.</p>
-                </div>
-                <!-- <a href="{% url 'pages:about' %}" class="about-me-btn">More about me</a> -->
-            </a>
-            <div class="hero">
-                <img src="{% static 'images/hero.jpg' %}" alt="hero image"/>
-                <div class="hero-text">
-                  <h1>Welcome to My Blog</h1>
-                  <a class="hero-button" href="#">Read More</a>
-                </div>
-            </div>
+{% block title %}{{ profile.full_name|default:"Bahar Barghbani" }} · Research & Projects{% endblock %}
+{% block meta_description %}Explore the research, projects, academic interests, and writing of {{ profile.full_name|default:"Bahar Barghbani" }}.{% endblock %}
+
+{% block body %}
+<section class="academic-hero">
+    <div class="hero-copy">
+        <p class="eyebrow">Research · Projects · Writing</p>
+        <h1>{{ profile.full_name|default:"Bahar Barghbani" }}</h1>
+        {% if profile.professional_title %}
+            <p class="hero-role">{{ profile.professional_title }}</p>
+        {% endif %}
+        {% if profile.major or profile.institution %}
+            <p class="academic-line">
+                {% if profile.major %}<span>{{ profile.major }}</span>{% endif %}
+                {% if profile.major and profile.institution %}<span aria-hidden="true">·</span>{% endif %}
+                {% if profile.institution %}<span>{{ profile.institution }}</span>{% endif %}
+            </p>
+        {% endif %}
+        <p class="hero-summary">
+            {{ profile.short_bio|default:"This portfolio brings together my research, projects, writing, and the questions I am currently exploring." }}
+        </p>
+        <div class="hero-actions">
+            <a class="button button-primary" href="{% url 'pages:research' %}">Explore my research</a>
+            <a class="button button-secondary" href="{% url 'pages:projects' %}">View projects</a>
+            {% if profile.cv %}
+                <a class="text-link" href="{% url 'pages:cv-download' %}">Download CV <span aria-hidden="true">↓</span></a>
+            {% endif %}
         </div>
-    {% endblock %}
-</body>
+        {% if profile.interest_list %}
+            <div class="interest-block">
+                <span class="interest-label">Research interests</span>
+                <ul class="tag-list" aria-label="Research interests">
+                    {% for interest in profile.interest_list %}
+                        <li>{{ interest }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+    <div class="hero-portrait">
+        <div class="portrait-accent" aria-hidden="true"></div>
+        <img src="{% static 'images/laptop-me.jpg' %}" alt="Portrait of {{ profile.full_name|default:'Bahar Barghbani' }}">
+        {% if profile.location %}<p class="portrait-caption">Based in {{ profile.location }}</p>{% endif %}
+    </div>
+</section>
+
+<section class="portfolio-section" aria-labelledby="research-heading">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">Current questions</p>
+            <h2 id="research-heading">Selected research</h2>
+        </div>
+        <a class="text-link" href="{% url 'pages:research' %}">All research <span aria-hidden="true">→</span></a>
+    </div>
+    <div class="card-grid">
+        {% for item in featured_research %}
+            <a class="portfolio-card research-card" href="{{ item.get_absolute_url }}">
+                <div class="card-meta">
+                    <span class="status status-{{ item.status }}">{{ item.get_status_display }}</span>
+                    {% if item.year %}<span>{{ item.year }}</span>{% endif %}
+                </div>
+                <h3>{{ item.title }}</h3>
+                {% if item.field %}<p class="card-kicker">{{ item.field }}</p>{% endif %}
+                <p>{{ item.summary|truncatewords:32 }}</p>
+                <span class="card-link">Read overview <span aria-hidden="true">→</span></span>
+            </a>
+        {% empty %}
+            <div class="empty-state">
+                <h3>Research profile in progress</h3>
+                <p>Research topics, papers, and ongoing questions will be collected here.</p>
+            </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="portfolio-section section-tinted" aria-labelledby="projects-heading">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">Ideas in practice</p>
+            <h2 id="projects-heading">Featured projects</h2>
+        </div>
+        <a class="text-link" href="{% url 'pages:projects' %}">All projects <span aria-hidden="true">→</span></a>
+    </div>
+    <div class="card-grid">
+        {% for project in featured_projects %}
+            <a class="portfolio-card project-card" href="{{ project.get_absolute_url }}">
+                {% if project.image %}
+                    <img class="card-image" src="{{ project.image.url }}" alt="">
+                {% endif %}
+                <div class="card-content">
+                    <h3>{{ project.title }}</h3>
+                    <p>{{ project.summary|truncatewords:30 }}</p>
+                    {% if project.technology_list %}
+                        <ul class="tag-list compact" aria-label="Technologies">
+                            {% for technology in project.technology_list|slice:":4" %}<li>{{ technology }}</li>{% endfor %}
+                        </ul>
+                    {% endif %}
+                    <span class="card-link">View project <span aria-hidden="true">→</span></span>
+                </div>
+            </a>
+        {% empty %}
+            <div class="empty-state">
+                <h3>Project collection in progress</h3>
+                <p>Technical and research projects will appear here with context, decisions, and outcomes.</p>
+            </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="portfolio-section" aria-labelledby="writing-heading">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">Learning in public</p>
+            <h2 id="writing-heading">Recent writing</h2>
+        </div>
+        <a class="text-link" href="{% url 'blog:posts' %}">All posts <span aria-hidden="true">→</span></a>
+    </div>
+    <div class="writing-list">
+        {% for post in recent_posts %}
+            <a class="writing-item" href="{{ post.get_absolute_url }}">
+                <time datetime="{{ post.published_at|date:'c' }}">{{ post.published_at|date:"M j, Y" }}</time>
+                <div>
+                    <h3>{{ post.post_title }}</h3>
+                    <p>{{ post.post_preview|truncatewords:24 }}</p>
+                </div>
+                <span aria-hidden="true">→</span>
+            </a>
+        {% empty %}
+            <div class="empty-state">
+                <h3>Writing is on the way</h3>
+                <p>Essays, research notes, and reflections will appear here.</p>
+            </div>
+        {% endfor %}
+    </div>
+</section>
+
+{% if profile.personal_note %}
+<section class="personal-note">
+    <p class="eyebrow">Beyond the work</p>
+    <p>{{ profile.personal_note|linebreaksbr }}</p>
+    <a class="text-link" href="{% url 'pages:about' %}">More about me <span aria-hidden="true">→</span></a>
+</section>
+{% endif %}
+
+<section class="contact-callout">
+    <div>
+        <p class="eyebrow">Let’s connect</p>
+        <h2>Interested in my work?</h2>
+        <p>I’m always glad to discuss research questions, thoughtful projects, and opportunities to collaborate.</p>
+    </div>
+    <a class="button button-light" href="{% url 'pages:contact' %}">Start a conversation</a>
+</section>
+{% endblock %}

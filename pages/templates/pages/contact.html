@@ -1,24 +1,43 @@
 {% extends "base.html" %}
+
+{% block title %}Contact · {{ site_profile.full_name|default:"Bahar Barghbani" }}{% endblock %}
+{% block meta_description %}Contact {{ site_profile.full_name|default:"Bahar Barghbani" }} about research, projects, and collaboration.{% endblock %}
+
 {% block body %}
-<div class="container form-card" >
-    <form method="POST">
-        {% csrf_token %}
-        <!-- {{ form.as_p }} as_p in Django is a built-in method of a Django form object that tells Django to render each field wrapped in a <p> tag. -->
-        {% for field in form %}
-            <div class="form-row">
-                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                <div class="form-input">
-                    {{ field }}
-                    {% if field.help_text %} <small class="form-help">{{ field.help_text}}</small> {% endif %}
-                    {% for error in field.errors %} <div class="form-error">
-                        {{ error }}
-                    </div> {% endfor%}
+<header class="page-intro">
+    <div>
+        <p class="eyebrow">Contact</p>
+        <h1>Let’s start a conversation</h1>
+        <p class="page-lede">Use the form for research conversations, project questions, or opportunities to collaborate.</p>
+    </div>
+</header>
+<section class="contact-layout">
+    <div class="contact-note">
+        <p class="eyebrow">A useful message includes</p>
+        <ul>
+            <li>A little context about you</li>
+            <li>What you would like to discuss</li>
+            <li>Any helpful links or timeframe</li>
+        </ul>
+        {% if site_profile.email %}<p>You can also email me at <a href="mailto:{{ site_profile.email }}">{{ site_profile.email }}</a>.</p>{% endif %}
+    </div>
+    <div class="container form-card">
+        <form method="POST">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="form-row">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    <div class="form-input">
+                        {{ field }}
+                        {% if field.help_text %}<small class="form-help">{{ field.help_text }}</small>{% endif %}
+                        {% for error in field.errors %}<div class="form-error">{{ error }}</div>{% endfor %}
+                    </div>
                 </div>
+            {% endfor %}
+            <div class="form-submit">
+                <button type="submit" class="form-btn">Send message</button>
             </div>
-        {% endfor %}
-        <div class="form-submit">
-            <button type="submit" class="form-btn">Send</button>
-        </div>
-    </form>
-</div>
+        </form>
+    </div>
+</section>
 {% endblock %}

@@ -1,25 +1,81 @@
 {% extends "base.html" %}
 {% load static %}
-<body>
-    {% block body%}
-        <div class="container about-container">
-            <div class="about-first-parag">
-                <div class="about-img">
-                    <img src="{% static 'images/laptop-me.jpg' %}" alt="about me profile"/>
-                </div>
-                <div class="about-text">
-                    Hi. This is Bahar. This is my first ever django project I have ever developed.
-                    I'm so excited for it.
-                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Voluptas aspernatur, tenetur delectus laborum explicabo architecto, vel culpa quidem nihil cumque illum ratione dignissimos. Iste, vitae provident officia soluta accusamus magni?
-                </div>
-            </div>
-            <div class="about-text">
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Porro ad quis unde quas. Aliquid neque labore sint? Exercitationem, fuga dicta! Ex reprehenderit sed libero quas consectetur dolore voluptate eius laboriosam!
-            </div>
-            <div class="social-info">
 
-            </div>
+{% block title %}About · {{ profile.full_name|default:"Bahar Barghbani" }}{% endblock %}
+{% block meta_description %}Academic background, interests, and personal story of {{ profile.full_name|default:"Bahar Barghbani" }}.{% endblock %}
+
+{% block body %}
+<header class="page-intro about-intro">
+    <div>
+        <p class="eyebrow">About</p>
+        <h1>A little more about me</h1>
+        <p class="page-lede">The person, interests, and motivation behind the work.</p>
+    </div>
+    {% if profile.cv %}
+        <a class="button button-secondary" href="{% url 'pages:cv-download' %}">Download my CV</a>
+    {% endif %}
+</header>
+
+<section class="about-layout">
+    <div class="about-photo">
+        <img src="{% static 'images/laptop-me.jpg' %}" alt="Portrait of {{ profile.full_name|default:'Bahar Barghbani' }}">
+    </div>
+    <div class="about-story">
+        <h2>{{ profile.full_name|default:"Bahar Barghbani" }}</h2>
+        {% if profile.professional_title %}<p class="about-role">{{ profile.professional_title }}</p>{% endif %}
+        <div class="prose">
+            {{ profile.about|default:"This website began as my first Django project and is growing into a home for my academic work, software projects, and writing."|linebreaks }}
         </div>
-    {% endblock %}
 
-</body>
+        {% if profile.major or profile.institution %}
+            <div class="profile-facts">
+                {% if profile.major %}
+                    <div><span>Major</span><strong>{{ profile.major }}</strong></div>
+                {% endif %}
+                {% if profile.institution %}
+                    <div><span>Institution</span><strong>{{ profile.institution }}</strong></div>
+                {% endif %}
+                {% if profile.location %}
+                    <div><span>Location</span><strong>{{ profile.location }}</strong></div>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+{% if profile.interest_list %}
+<section class="portfolio-section about-section">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">Academic direction</p>
+            <h2>Research interests</h2>
+        </div>
+    </div>
+    <ul class="interest-grid">
+        {% for interest in profile.interest_list %}
+            <li><span>{{ forloop.counter|stringformat:"02d" }}</span>{{ interest }}</li>
+        {% endfor %}
+    </ul>
+</section>
+{% endif %}
+
+{% if profile.personal_note %}
+<section class="personal-note about-personal-note">
+    <p class="eyebrow">Outside research</p>
+    <h2>The more personal part</h2>
+    <p>{{ profile.personal_note|linebreaksbr }}</p>
+</section>
+{% endif %}
+
+<section class="profile-links" aria-label="Professional links">
+    <h2>Find me elsewhere</h2>
+    <div>
+        {% if profile.email %}<a href="mailto:{{ profile.email }}">Email</a>{% endif %}
+        {% if profile.github_url %}<a href="{{ profile.github_url }}" rel="noreferrer">GitHub</a>{% endif %}
+        {% if profile.linkedin_url %}<a href="{{ profile.linkedin_url }}" rel="noreferrer">LinkedIn</a>{% endif %}
+        {% if profile.scholar_url %}<a href="{{ profile.scholar_url }}" rel="noreferrer">Google Scholar</a>{% endif %}
+        {% if profile.orcid_url %}<a href="{{ profile.orcid_url }}" rel="noreferrer">ORCID</a>{% endif %}
+        <a href="{% url 'pages:contact' %}">Contact form</a>
+    </div>
+</section>
+{% endblock %}

@@ -5,21 +5,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'pages/style.css' %}"/>
+    <meta name="description" content="{% block meta_description %}The academic portfolio, research, projects, and writing of {{ site_profile.full_name|default:'Bahar Barghbani' }}.{% endblock %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'pages/style.css' %}">
+    <link rel="stylesheet" href="{% static 'pages/academic.css' %}">
     {% block extra_css %}{% endblock %}
-    <title>{% block title %}Personal Blog{% endblock %}</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Open+Sans&display=swap" rel="stylesheet"/>
+    <title>{% block title %}{{ site_profile.full_name|default:"Bahar Barghbani" }} · Academic Portfolio{% endblock %}</title>
 </head>
 
 <body>
-    <div class="main-container">
-        <header class="header">
-            <div class="name">Bahar Barghbani</div>
-            <div class="pages">
-                <a class="nav-link" href="{% url 'pages:home' %}">Home</a>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <div class="site-shell">
+        <header class="site-header">
+            <a class="site-brand" href="{% url 'pages:home' %}" aria-label="Home">
+                <span class="brand-name">{{ site_profile.full_name|default:"Bahar Barghbani" }}</span>
+                <span class="brand-label">Academic portfolio</span>
+            </a>
+            <nav class="primary-nav" aria-label="Primary navigation">
+                <a class="nav-link" href="{% url 'pages:research' %}">Research</a>
+                <a class="nav-link" href="{% url 'pages:projects' %}">Projects</a>
+                <a class="nav-link" href="{% url 'blog:posts' %}">Writing</a>
                 <a class="nav-link" href="{% url 'pages:about' %}">About</a>
-                <a class="nav-link" href="{% url 'blog:posts' %}">Posts</a>
                 <a class="nav-link" href="{% url 'pages:contact' %}">Contact</a>
+                {% if site_profile.cv %}
+                    <a class="nav-link nav-cv" href="{% url 'pages:cv-download' %}">Download CV</a>
+                {% endif %}
+            </nav>
+            <div class="account-nav">
                 {% if user.is_authenticated %}
                     {% if user.is_staff %}
                         <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
@@ -37,6 +51,7 @@
                 {% endif %}
             </div>
         </header>
+
         {% if messages %}
             <div class="messages" aria-live="polite">
                 {% for message in messages %}
@@ -44,8 +59,25 @@
                 {% endfor %}
             </div>
         {% endif %}
-        {% block body %}
-        {% endblock %}
+
+        <main id="main-content">
+            {% block body %}{% endblock %}
+        </main>
+
+        <footer class="site-footer">
+            <div>
+                <strong>{{ site_profile.full_name|default:"Bahar Barghbani" }}</strong>
+                <p>Research, projects, and notes from an evolving academic journey.</p>
+            </div>
+            <div class="footer-links">
+                {% if site_profile.email %}<a href="mailto:{{ site_profile.email }}">Email</a>{% endif %}
+                {% if site_profile.github_url %}<a href="{{ site_profile.github_url }}" rel="noreferrer">GitHub</a>{% endif %}
+                {% if site_profile.linkedin_url %}<a href="{{ site_profile.linkedin_url }}" rel="noreferrer">LinkedIn</a>{% endif %}
+                {% if site_profile.scholar_url %}<a href="{{ site_profile.scholar_url }}" rel="noreferrer">Google Scholar</a>{% endif %}
+                {% if site_profile.orcid_url %}<a href="{{ site_profile.orcid_url }}" rel="noreferrer">ORCID</a>{% endif %}
+            </div>
+            <small>© {% now "Y" %} {{ site_profile.full_name|default:"Bahar Barghbani" }}</small>
+        </footer>
     </div>
 </body>
 </html>

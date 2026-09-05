@@ -1,5 +1,17 @@
 {% extends "base.html" %}
+
+{% block title %}Writing · {{ site_profile.full_name|default:"Bahar Barghbani" }}{% endblock %}
+{% block meta_description %}Essays, research notes, and reflections by {{ site_profile.full_name|default:"Bahar Barghbani" }}.{% endblock %}
+
 {% block body %}
+    <header class="page-intro">
+        <div>
+            <p class="eyebrow">Writing</p>
+            <h1>Notes and reflections</h1>
+            <p class="page-lede">Essays, research notes, and things I have learned while building and exploring.</p>
+        </div>
+    </header>
+    <section class="posts-index" aria-label="Published writing">
     {% for post in posts_list %}
         {% include "blog/post_card.html" with post=post %}
     {% empty %}
@@ -8,4 +20,5 @@
             <p>New writing will appear here after it is published.</p>
         </div>
     {% endfor %}
+    </section>
 {% endblock %}

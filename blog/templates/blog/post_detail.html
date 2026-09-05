@@ -1,4 +1,8 @@
 {% extends "base.html" %}
+
+{% block title %}{{ post.post_title }} · Writing{% endblock %}
+{% block meta_description %}{{ post.post_preview|truncatewords:28 }}{% endblock %}
+
 {% block body %}
 {% if user.is_staff and not post.is_public %}
   <div class="publication-notice">
@@ -14,7 +18,7 @@
       <img src="{{ post.image.url }}" alt="{{ post.post_title }}"/>
     {% endif %}
     <div class="post-content">
-        <h3 class="post-title">{{ post.post_title}}</h3>
+        <h1 class="post-title">{{ post.post_title}}</h1>
         {% if post.published_at %}
           <time class="post-date" datetime="{{ post.published_at|date:'c' }}">
             {{ post.published_at|date:"F j, Y" }}
@@ -26,6 +30,10 @@
 <br/><br/>
 
 <div class="comment-container">
+    <div class="comment-section-heading">
+      <p class="eyebrow">Discussion</p>
+      <h2>Comments</h2>
+    </div>
     {% for comment in comments %}
       <article class="comment">
         <div class="comment-header">
