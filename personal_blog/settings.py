@@ -27,7 +27,7 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))# Build paths inside the pro
 SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env.bool('DEBUG', default=True)
 
 ALLOWED_HOSTS = []
 
@@ -145,9 +145,29 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 # MEDIA_ROOT = os.path.join(BASE_DIR, )
-DEFAULT_FROM_EMAIL = "no-reply@yourdomain.com"
-CONTACT_RECEIVER_EMAIL = "bahar.brqbni@gmail.com"
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # in developement
+EMAIL_BACKEND = env(
+    "EMAIL_BACKEND",
+    default="django.core.mail.backends.console.EmailBackend",
+)
+EMAIL_HOST = env("EMAIL_HOST", default="smtp.gmail.com")
+EMAIL_PORT = env.int("EMAIL_PORT", default=587)
+EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS", default=True)
+EMAIL_USE_SSL = env.bool("EMAIL_USE_SSL", default=False)
+EMAIL_HOST_USER = env("EMAIL_HOST_USER", default="")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default="")
+EMAIL_TIMEOUT = env.int("EMAIL_TIMEOUT", default=10)
+DEFAULT_FROM_EMAIL = env(
+    "DEFAULT_FROM_EMAIL",
+    default=EMAIL_HOST_USER or "webmaster@localhost",
+)
+CONTACT_RECEIVER_EMAIL = env(
+    "CONTACT_RECEIVER_EMAIL",
+    default="bahar.brqbni@gmail.com",
+)
+CONTACT_EMAIL_SUBJECT_PREFIX = env(
+    "CONTACT_EMAIL_SUBJECT_PREFIX",
+    default="[Personal Blog]",
+)
 
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "pages:home"
