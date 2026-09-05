@@ -36,6 +36,17 @@ ALLOWED_HOSTS = env.list(
 )
 CSRF_TRUSTED_ORIGINS = env.list("CSRF_TRUSTED_ORIGINS", default=[])
 
+# Render supplies its public hostname at runtime. Trust it automatically so the
+# first deployment works before a custom domain is connected.
+RENDER_EXTERNAL_HOSTNAME = env("RENDER_EXTERNAL_HOSTNAME", default="")
+if RENDER_EXTERNAL_HOSTNAME:
+    if RENDER_EXTERNAL_HOSTNAME not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+
+    render_origin = f"https://{RENDER_EXTERNAL_HOSTNAME}"
+    if render_origin not in CSRF_TRUSTED_ORIGINS:
+        CSRF_TRUSTED_ORIGINS.append(render_origin)
+
 
 # Application definition
 
@@ -175,6 +186,7 @@ MEDIA_URL = env("MEDIA_URL", default="/media/")
 MEDIA_ROOT = Path(env("MEDIA_ROOT", default=str(BASE_DIR / "media")))
 if not MEDIA_ROOT.is_absolute():
     MEDIA_ROOT = BASE_DIR / MEDIA_ROOT
+SERVE_MEDIA = env.bool("SERVE_MEDIA", default=DEBUG)
 EMAIL_BACKEND = env(
     "EMAIL_BACKEND",
     default="django.core.mail.backends.console.EmailBackend",

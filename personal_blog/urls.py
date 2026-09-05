@@ -18,6 +18,8 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.urls import re_path
+from django.views.static import serve as serve_media
 from users import views as userviews
 
 
@@ -29,4 +31,17 @@ urlpatterns = [
     path("register/", userviews.register, name='register'),
     path("login/", userviews.Login.as_view(), name='login'),
     path('logout/', userviews.Logout.as_view(), name='logout'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+elif settings.SERVE_MEDIA:
+    # This small portfolio serves uploads from its attached Render disk. Move
+    # media to object storage if traffic grows or the app needs multiple workers.
+    urlpatterns += [
+        re_path(
+            r"^media/(?P<path>.*)$",
+            serve_media,
+            {"document_root": settings.MEDIA_ROOT},
+        ),
+    ]
