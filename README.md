@@ -51,26 +51,57 @@ live under `MEDIA_ROOT`; WhiteNoise does not make them durable. In production,
 either mount persistent storage at `MEDIA_ROOT` or configure an object-storage
 backend before relying on admin uploads.
 
-## Deploying from GitHub with Render
+## Deploying from GitHub with Liara
 
-[`render.yaml`](render.yaml) defines the production web service, PostgreSQL
-database, generated Django secret, HTTPS settings, and a persistent disk for
-CVs and uploaded images. Both services use Render's smallest persistent paid
-plans because the free PostgreSQL database expires and a free web service
-cannot attach a persistent disk.
+[`liara.json`](liara.json) selects Liara's Django runtime, Python 3.12, Tehran
+time, static-file collection, and repository-controlled Django settings. The
+application remains in GitHub and can redeploy automatically from `main`.
 
-1. Push `main` to GitHub.
-2. In Render, choose **New > Blueprint** and connect this GitHub repository.
-3. Keep the default `render.yaml` path and apply the Blueprint.
-4. Enter the requested Gmail address and App Password when Render prompts for
-   secret environment variables.
-5. After the first deploy, open the service shell and run
-   `python manage.py createsuperuser` once to create the production admin.
+1. In Liara, create a **Django** application and note its identifier. Its free
+   hostname will be `https://<app-id>.liara.run`.
+2. Create a PostgreSQL database in the same private network. From its
+   **Connection** page, copy the private connection URL.
+3. Create an application disk and mount it at `/data/media` so uploaded CVs and
+   images survive deployments.
+4. Add the production environment variables shown below in the application's
+   settings. Generate `SECRET_KEY` locally; never commit its value.
+5. In Liara account settings, connect GitHub and grant access only to
+   `baharbarghbani/Personal-Blog`.
+6. Open the application's **New deployment > GitHub** page, select the
+   repository and `main`, choose automatic deployment, and deploy once.
+7. In the application console, run the migration and administrator commands
+   shown below.
 
-Every later push to `main` automatically rebuilds and redeploys the website.
-Render supplies the first `onrender.com` hostname automatically; add a custom
-domain later by extending `ALLOWED_HOSTS` and `CSRF_TRUSTED_ORIGINS` in the
-service environment.
+```env
+SECRET_KEY=<generated-secret>
+DEBUG=False
+ALLOWED_HOSTS=<app-id>.liara.run
+CSRF_TRUSTED_ORIGINS=https://<app-id>.liara.run
+DATABASE_URL=<private-postgresql-url>
+DATABASE_SSL_REQUIRE=False
+SECURE_SSL_REDIRECT=True
+SESSION_COOKIE_SECURE=True
+CSRF_COOKIE_SECURE=True
+MEDIA_ROOT=/data/media
+MEDIA_URL=/media/
+SERVE_MEDIA=True
+```
+
+Generate the secret on your computer:
+
+```bash
+python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
+```
+
+Then initialize the production database from Liara's application console:
+
+```bash
+python manage.py migrate
+python manage.py createsuperuser
+```
+
+Add the SMTP variables from `.env.example` separately when you are ready to
+enable the contact form. Never paste the Gmail App Password into GitHub.
 
 ## Contact email
 

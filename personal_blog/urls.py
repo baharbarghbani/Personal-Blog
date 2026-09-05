@@ -36,7 +36,7 @@ urlpatterns = [
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 elif settings.SERVE_MEDIA:
-    # This small portfolio serves uploads from its attached Render disk. Move
+    # This small portfolio serves uploads from its attached platform disk. Move
     # media to object storage if traffic grows or the app needs multiple workers.
     urlpatterns += [
         re_path(
