@@ -1,0 +1,57 @@
+# Bahar Barghbani — Academic Portfolio
+
+A Django academic portfolio and blog with admin-managed profile, research,
+projects, posts, comments, CV downloads, and contact email delivery.
+
+## Local development
+
+1. Create and activate a virtual environment.
+2. Install dependencies with `python -m pip install -r requirements.txt`.
+3. Copy `.env.example` to `.env` and fill in the local PostgreSQL settings.
+4. Run `python manage.py migrate`.
+5. Run `python manage.py runserver`.
+
+The Django admin panel is available at `/admin/`.
+
+## Production deployment contract
+
+The repository is compatible with hosts that run a build command and a web
+start command.
+
+- Build command: `./build.sh`
+- Start command: `./start.sh`
+- Health/start port: supplied through the host's `PORT` environment variable
+
+Required production environment variables:
+
+- `SECRET_KEY`: a new long random production secret
+- `DEBUG=False`
+- `ALLOWED_HOSTS`: comma-separated hostnames without `https://`
+- `CSRF_TRUSTED_ORIGINS`: comma-separated complete origins with `https://`
+- `DATABASE_URL`: the PostgreSQL connection URL supplied by the host
+
+Set `DATABASE_SSL_REQUIRE=True` only when the database provider requires SSL.
+
+For a permanently HTTPS domain, also set:
+
+- `SECURE_SSL_REDIRECT=True`
+- `SESSION_COOKIE_SECURE=True`
+- `CSRF_COOKIE_SECURE=True`
+
+Start with `SECURE_HSTS_SECONDS=0`. Enable HSTS only after confirming every
+route and subdomain works through HTTPS, because browsers remember that policy.
+
+## Static and uploaded files
+
+`build.sh` collects CSS and images into `STATIC_ROOT`. WhiteNoise serves those
+versioned static assets from the Django process.
+
+Uploaded files are different. Post images, project images, and the uploaded CV
+live under `MEDIA_ROOT`; WhiteNoise does not make them durable. In production,
+either mount persistent storage at `MEDIA_ROOT` or configure an object-storage
+backend before relying on admin uploads.
+
+## Contact email
+
+Set the SMTP variables documented in `.env.example`. For Gmail, use an App
+Password rather than your normal account password.
