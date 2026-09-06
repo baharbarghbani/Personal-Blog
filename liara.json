@@ -8,8 +8,10 @@
     "modifySettings": false,
     "geospatial": false
   },
-  "disks": {
+  "disks": [
+  {
     "name": "media",
-    "mountTo": "/media"
+    "mountTo": "media/"
   }
+]
 }
