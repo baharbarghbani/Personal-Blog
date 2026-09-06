@@ -7,5 +7,9 @@
     "compileMessages": false,
     "modifySettings": false,
     "geospatial": false
+  },
+  "disks": {
+    "name": "media",
+    "mountTo": "/media"
   }
 }
