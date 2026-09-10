@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import sys
 from pathlib import Path
 
 import dj_database_url
@@ -21,11 +22,22 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 env = environ.Env()
 environ.Env.read_env(BASE_DIR / ".env")
 
+# Liara collects static files while building the image, before application
+# environment variables are available. These build-only defaults let Django
+# load for that command without weakening the running application's settings.
+COLLECTING_STATIC = len(sys.argv) > 1 and sys.argv[1] == "collectstatic"
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('SECRET_KEY')
+if COLLECTING_STATIC:
+    SECRET_KEY = env(
+        "SECRET_KEY",
+        default="build-only-secret-key-used-for-static-file-collection",
+    )
+else:
+    SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('DEBUG', default=True)
@@ -100,6 +112,13 @@ if DATABASE_URL:
             conn_health_checks=True,
             ssl_require=env.bool("DATABASE_SSL_REQUIRE", default=False),
         )
+    }
+elif COLLECTING_STATIC:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": ":memory:",
+        }
     }
 else:
     DATABASES = {
