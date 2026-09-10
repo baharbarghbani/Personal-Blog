@@ -3,7 +3,7 @@
     "mirror": false,
     "pythonVersion": "3.12",
     "timezone": "Asia/Tehran",
-    "collectStatic": true,
+    "collectStatic": false,
     "compileMessages": false,
     "modifySettings": false,
     "geospatial": false
