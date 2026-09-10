@@ -26,9 +26,17 @@ def unique_slug(instance, title):
 
 class Profile(models.Model):
     full_name = models.CharField(max_length=120, default="Bahar Barghbani")
-    professional_title = models.CharField(max_length=180, blank=True)
+    professional_title = models.CharField(
+        max_length=180,
+        blank=True,
+        default="Computer Engineering · Computer Systems & Architecture",
+    )
     major = models.CharField(max_length=180, blank=True)
     institution = models.CharField(max_length=180, blank=True)
+    education_details = models.TextField(
+        blank=True,
+        help_text="Enter one education fact per line, such as graduation date or GPA.",
+    )
     location = models.CharField(max_length=120, blank=True)
     short_bio = models.TextField(
         blank=True,
@@ -45,6 +53,22 @@ class Profile(models.Model):
     personal_note = models.TextField(
         blank=True,
         help_text="A short personal detail, such as hobbies or what motivates you.",
+    )
+    awards = models.TextField(
+        blank=True,
+        help_text="Enter one honor or award per line.",
+    )
+    technical_skills = models.TextField(
+        blank=True,
+        help_text="Enter one labeled skill group per line.",
+    )
+    languages = models.TextField(
+        blank=True,
+        help_text="Enter one language and proficiency level per line.",
+    )
+    service = models.TextField(
+        blank=True,
+        help_text="Enter one service or student-leadership item per line.",
     )
     email = models.EmailField(blank=True)
     github_url = models.URLField(blank=True)
@@ -74,6 +98,30 @@ class Profile(models.Model):
     @property
     def interest_list(self):
         return [interest.strip() for interest in self.research_interests.splitlines() if interest.strip()]
+
+    @staticmethod
+    def _nonempty_lines(value):
+        return [line.strip() for line in value.splitlines() if line.strip()]
+
+    @property
+    def education_detail_list(self):
+        return self._nonempty_lines(self.education_details)
+
+    @property
+    def award_list(self):
+        return self._nonempty_lines(self.awards)
+
+    @property
+    def technical_skill_list(self):
+        return self._nonempty_lines(self.technical_skills)
+
+    @property
+    def language_list(self):
+        return self._nonempty_lines(self.languages)
+
+    @property
+    def service_list(self):
+        return self._nonempty_lines(self.service)
 
 
 class Research(models.Model):
@@ -138,6 +186,11 @@ class Project(models.Model):
         blank=True,
         help_text="The problem, your approach, and the outcome.",
     )
+    date_label = models.CharField(
+        max_length=100,
+        blank=True,
+        help_text="Optional display text such as 'February 2026'.",
+    )
     technologies = models.CharField(
         max_length=300,
         blank=True,
@@ -169,3 +222,52 @@ class Project(models.Model):
     @property
     def technology_list(self):
         return [technology.strip() for technology in self.technologies.split(",") if technology.strip()]
+
+
+class Experience(models.Model):
+    class Kind(models.TextChoices):
+        RESEARCH = "research", "Research"
+        INTERNSHIP = "internship", "Internship"
+        TEACHING = "teaching", "Teaching"
+        PROFESSIONAL = "professional", "Professional"
+
+    role = models.CharField(max_length=180)
+    organization = models.CharField(max_length=180)
+    kind = models.CharField(max_length=20, choices=Kind.choices)
+    location = models.CharField(max_length=140, blank=True)
+    start_date = models.DateField(blank=True, null=True)
+    end_date = models.DateField(blank=True, null=True)
+    date_label = models.CharField(
+        max_length=100,
+        blank=True,
+        help_text="Optional display text such as 'Summer 2026 - Present'.",
+    )
+    is_current = models.BooleanField(default=False)
+    summary = models.TextField(
+        help_text="Briefly explain your responsibilities, contribution, and outcome."
+    )
+    highlights = models.TextField(
+        blank=True,
+        help_text="Enter one concrete accomplishment per line.",
+    )
+    organization_url = models.URLField(blank=True)
+    featured = models.BooleanField(default=False)
+    is_visible = models.BooleanField(default=True)
+    display_order = models.PositiveIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ("display_order", "-start_date", "organization", "role")
+
+    def __str__(self):
+        return f"{self.role} at {self.organization}"
+
+    def clean(self):
+        super().clean()
+        if self.start_date and self.end_date and self.end_date < self.start_date:
+            raise ValidationError("End date cannot be earlier than start date.")
+
+    @property
+    def highlight_list(self):
+        return [highlight.strip() for highlight in self.highlights.splitlines() if highlight.strip()]

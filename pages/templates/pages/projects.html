@@ -23,6 +23,7 @@
                 {% endif %}
             </a>
             <div class="project-copy">
+                {% if project.date_label %}<p class="project-date">{{ project.date_label }}</p>{% endif %}
                 <h2><a href="{{ project.get_absolute_url }}">{{ project.title }}</a></h2>
                 <p>{{ project.summary }}</p>
                 {% if project.technology_list %}

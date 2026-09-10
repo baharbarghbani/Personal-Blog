@@ -12,12 +12,13 @@ class AuthenticationFlowTests(TestCase):
             password=self.password,
         )
 
-    def test_guest_navigation_shows_login_and_signup(self):
+    def test_guest_navigation_hides_public_account_links(self):
         response = self.client.get(reverse("pages:home"))
 
-        self.assertContains(response, 'href="%s">Login' % reverse("login"))
-        self.assertContains(response, 'href="%s">Sign up' % reverse("register"))
+        self.assertNotContains(response, 'href="%s">Login' % reverse("login"))
+        self.assertNotContains(response, 'href="%s">Sign up' % reverse("register"))
         self.assertNotContains(response, ">Logout</button>")
+        self.assertEqual(self.client.get(reverse("login")).status_code, 200)
 
     def test_user_can_login_with_email_and_is_redirected_home(self):
         response = self.client.post(

@@ -8,18 +8,30 @@
     <div>
         <p class="eyebrow">Contact</p>
         <h1>Let’s start a conversation</h1>
-        <p class="page-lede">Use the form for research conversations, project questions, or opportunities to collaborate.</p>
+        <p class="page-lede">For research conversations, graduate opportunities, or thoughtful technical collaboration.</p>
     </div>
 </header>
 <section class="contact-layout">
     <div class="contact-note">
-        <p class="eyebrow">A useful message includes</p>
-        <ul>
-            <li>A little context about you</li>
-            <li>What you would like to discuss</li>
-            <li>Any helpful links or timeframe</li>
-        </ul>
-        {% if site_profile.email %}<p>You can also email me at <a href="mailto:{{ site_profile.email }}">{{ site_profile.email }}</a>.</p>{% endif %}
+        <p class="eyebrow">Contact directly</p>
+        <dl class="contact-links">
+            {% if site_profile.email %}
+                <div><dt>Email</dt><dd><a href="mailto:{{ site_profile.email }}">{{ site_profile.email }}</a></dd></div>
+            {% endif %}
+            {% if site_profile.linkedin_url %}
+                <div><dt>LinkedIn</dt><dd><a href="{{ site_profile.linkedin_url }}" rel="noreferrer">baharbarghbani ↗</a></dd></div>
+            {% endif %}
+            {% if site_profile.github_url %}
+                <div><dt>GitHub</dt><dd><a href="{{ site_profile.github_url }}" rel="noreferrer">baharbarghbani ↗</a></dd></div>
+            {% endif %}
+            {% if site_profile.scholar_url %}
+                <div><dt>Google Scholar</dt><dd><a href="{{ site_profile.scholar_url }}" rel="noreferrer">Research profile ↗</a></dd></div>
+            {% endif %}
+            {% if site_profile.orcid_url %}
+                <div><dt>ORCID</dt><dd><a href="{{ site_profile.orcid_url }}" rel="noreferrer">Research identifier ↗</a></dd></div>
+            {% endif %}
+        </dl>
+        <p class="contact-guidance">A useful message includes a little context, what you would like to discuss, and any helpful timeframe.</p>
     </div>
     <div class="container form-card">
         <form method="POST">

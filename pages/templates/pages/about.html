@@ -11,9 +11,7 @@
         <h1>A little more about me</h1>
         <p class="page-lede">The person, interests, and motivation behind the work.</p>
     </div>
-    {% if profile.cv %}
-        <a class="button button-secondary" href="{% url 'pages:cv-download' %}">Download my CV</a>
-    {% endif %}
+    <a class="button button-secondary" href="{% url 'pages:cv-download' %}">Download my CV</a>
 </header>
 
 <section class="about-layout">
@@ -56,6 +54,60 @@
             <li><span>{{ forloop.counter|stringformat:"02d" }}</span>{{ interest }}</li>
         {% endfor %}
     </ul>
+</section>
+{% endif %}
+
+{% if profile.education_detail_list or profile.award_list or profile.technical_skill_list or profile.language_list or profile.service_list %}
+<section class="portfolio-section credentials-section" aria-labelledby="credentials-heading">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">Academic snapshot</p>
+            <h2 id="credentials-heading">Education and qualifications</h2>
+        </div>
+    </div>
+    <div class="credential-grid">
+        {% if profile.education_detail_list %}
+            <article class="credential-card">
+                <h3>Education</h3>
+                <p class="credential-lede">{{ profile.major }} · {{ profile.institution }}</p>
+                <ul>
+                    {% for detail in profile.education_detail_list %}<li>{{ detail }}</li>{% endfor %}
+                </ul>
+            </article>
+        {% endif %}
+        {% if profile.award_list %}
+            <article class="credential-card">
+                <h3>Honors and awards</h3>
+                <ul>
+                    {% for award in profile.award_list %}<li>{{ award }}</li>{% endfor %}
+                </ul>
+            </article>
+        {% endif %}
+        {% if profile.technical_skill_list %}
+            <article class="credential-card credential-card-wide">
+                <h3>Technical skills</h3>
+                <ul>
+                    {% for skill_group in profile.technical_skill_list %}<li>{{ skill_group }}</li>{% endfor %}
+                </ul>
+            </article>
+        {% endif %}
+        {% if profile.language_list %}
+            <article class="credential-card">
+                <h3>Languages</h3>
+                <ul>
+                    {% for language in profile.language_list %}<li>{{ language }}</li>{% endfor %}
+                </ul>
+            </article>
+        {% endif %}
+        {% if profile.service_list %}
+            <article class="credential-card">
+                <h3>Service and leadership</h3>
+                <ul>
+                    {% for item in profile.service_list %}<li>{{ item }}</li>{% endfor %}
+                </ul>
+            </article>
+        {% endif %}
+    </div>
 </section>
 {% endif %}
 

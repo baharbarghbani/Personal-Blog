@@ -8,6 +8,7 @@
     <a class="back-link" href="{% url 'pages:projects' %}">← All projects</a>
     <header class="detail-header project-detail-header">
         <p class="eyebrow">Project</p>
+        {% if project.date_label %}<p class="detail-date">{{ project.date_label }}</p>{% endif %}
         <h1>{{ project.title }}</h1>
         <p class="detail-summary">{{ project.summary }}</p>
         {% if project.technology_list %}

@@ -2,12 +2,12 @@
 {% load static %}
 
 {% block title %}{{ profile.full_name|default:"Bahar Barghbani" }} · Research & Projects{% endblock %}
-{% block meta_description %}Explore the research, projects, academic interests, and writing of {{ profile.full_name|default:"Bahar Barghbani" }}.{% endblock %}
+{% block meta_description %}Explore the research, projects, and experience of {{ profile.full_name|default:"Bahar Barghbani" }} in computer systems and architecture.{% endblock %}
 
 {% block body %}
 <section class="academic-hero">
     <div class="hero-copy">
-        <p class="eyebrow">Research · Projects · Writing</p>
+        <p class="eyebrow">Research · Projects · Experience</p>
         <h1>{{ profile.full_name|default:"Bahar Barghbani" }}</h1>
         {% if profile.professional_title %}
             <p class="hero-role">{{ profile.professional_title }}</p>
@@ -20,14 +20,12 @@
             </p>
         {% endif %}
         <p class="hero-summary">
-            {{ profile.short_bio|default:"This portfolio brings together my research, projects, writing, and the questions I am currently exploring." }}
+            {{ profile.short_bio|default:"This portfolio brings together my research, technical projects, experience, and the questions I am currently exploring." }}
         </p>
         <div class="hero-actions">
             <a class="button button-primary" href="{% url 'pages:research' %}">Explore my research</a>
             <a class="button button-secondary" href="{% url 'pages:projects' %}">View projects</a>
-            {% if profile.cv %}
-                <a class="text-link" href="{% url 'pages:cv-download' %}">Download CV <span aria-hidden="true">↓</span></a>
-            {% endif %}
+            <a class="text-link" href="{% url 'pages:cv-download' %}">Download CV <span aria-hidden="true">↓</span></a>
         </div>
         {% if profile.interest_list %}
             <div class="interest-block">
@@ -91,6 +89,9 @@
                     <img class="card-image" src="{{ project.image.url }}" alt="">
                 {% endif %}
                 <div class="card-content">
+                    {% if project.date_label %}
+                        <div class="card-meta"><span>{{ project.date_label }}</span></div>
+                    {% endif %}
                     <h3>{{ project.title }}</h3>
                     <p>{{ project.summary|truncatewords:30 }}</p>
                     {% if project.technology_list %}
@@ -110,32 +111,34 @@
     </div>
 </section>
 
-<section class="portfolio-section" aria-labelledby="writing-heading">
+{% if featured_experiences %}
+<section class="portfolio-section" aria-labelledby="experience-heading">
     <div class="section-heading">
         <div>
-            <p class="eyebrow">Learning in public</p>
-            <h2 id="writing-heading">Recent writing</h2>
+            <p class="eyebrow">Research · Industry · Teaching</p>
+            <h2 id="experience-heading">Selected experience</h2>
         </div>
-        <a class="text-link" href="{% url 'blog:posts' %}">All posts <span aria-hidden="true">→</span></a>
+        <a class="text-link" href="{% url 'pages:experience' %}">All experience <span aria-hidden="true">→</span></a>
     </div>
-    <div class="writing-list">
-        {% for post in recent_posts %}
-            <a class="writing-item" href="{{ post.get_absolute_url }}">
-                <time datetime="{{ post.published_at|date:'c' }}">{{ post.published_at|date:"M j, Y" }}</time>
-                <div>
-                    <h3>{{ post.post_title }}</h3>
-                    <p>{{ post.post_preview|truncatewords:24 }}</p>
+    <div class="card-grid">
+        {% for item in featured_experiences %}
+            <article class="portfolio-card experience-summary-card">
+                <div class="card-meta">
+                    <span class="status">{{ item.get_kind_display }}</span>
+                    {% if item.date_label %}
+                        <span>{{ item.date_label }}</span>
+                    {% elif item.start_date %}
+                        <span>{{ item.start_date|date:"M Y" }}–{% if item.is_current %}Present{% elif item.end_date %}{{ item.end_date|date:"M Y" }}{% endif %}</span>
+                    {% endif %}
                 </div>
-                <span aria-hidden="true">→</span>
-            </a>
-        {% empty %}
-            <div class="empty-state">
-                <h3>Writing is on the way</h3>
-                <p>Essays, research notes, and reflections will appear here.</p>
-            </div>
+                <h3>{{ item.role }}</h3>
+                <p class="card-kicker">{{ item.organization }}</p>
+                <p>{{ item.summary|truncatewords:28 }}</p>
+            </article>
         {% endfor %}
     </div>
 </section>
+{% endif %}
 
 {% if profile.personal_note %}
 <section class="personal-note">

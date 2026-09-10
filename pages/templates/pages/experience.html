@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Experience · {{ site_profile.full_name|default:"Bahar Barghbani" }}{% endblock %}
+{% block meta_description %}Research, teaching, internship, and professional experience from {{ site_profile.full_name|default:"Bahar Barghbani" }}.{% endblock %}
+
+{% block body %}
+<header class="page-intro">
+    <div>
+        <p class="eyebrow">Experience</p>
+        <h1>Research, practice, and teaching</h1>
+        <p class="page-lede">Roles that have shaped how I approach computer systems, research questions, and collaborative technical work.</p>
+    </div>
+</header>
+
+<section class="entry-list" aria-label="Experience entries">
+    {% for item in experience_items %}
+        <article class="entry-card experience-entry">
+            <div class="entry-index">{{ forloop.counter|stringformat:"02d" }}</div>
+            <div class="entry-main">
+                <div class="card-meta">
+                    <span class="status">{{ item.get_kind_display }}</span>
+                    {% if item.date_label %}
+                        <span>{{ item.date_label }}</span>
+                    {% elif item.start_date %}
+                        <span>{{ item.start_date|date:"M Y" }}–{% if item.is_current %}Present{% elif item.end_date %}{{ item.end_date|date:"M Y" }}{% endif %}</span>
+                    {% endif %}
+                    {% if item.location %}<span>{{ item.location }}</span>{% endif %}
+                </div>
+                <h2>{{ item.role }}</h2>
+                <p class="entry-venue">{{ item.organization }}</p>
+                <p>{{ item.summary }}</p>
+                {% if item.highlight_list %}
+                    <ul class="experience-highlights">
+                        {% for highlight in item.highlight_list %}<li>{{ highlight }}</li>{% endfor %}
+                    </ul>
+                {% endif %}
+                {% if item.organization_url %}
+                    <div class="entry-links"><a href="{{ item.organization_url }}" rel="noreferrer">Organization ↗</a></div>
+                {% endif %}
+            </div>
+        </article>
+    {% empty %}
+        <div class="empty-state large">
+            <h2>Experience details are being prepared</h2>
+            <p>Research roles, internships, and teaching experience will be added here.</p>
+        </div>
+    {% endfor %}
+</section>
+{% endblock %}
