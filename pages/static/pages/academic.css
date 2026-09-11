@@ -1061,6 +1061,10 @@ h4 {
   padding: 56px 0 96px;
 }
 
+.contact-layout-direct {
+  grid-template-columns: minmax(0, 720px);
+}
+
 .contact-note {
   padding-top: 24px;
   color: var(--ink-soft);
@@ -1095,12 +1099,6 @@ h4 {
 .contact-guidance {
   margin-top: 28px;
   font-size: 14px;
-}
-
-.contact-layout .form-card {
-  width: 100%;
-  max-width: none;
-  margin: 0;
 }
 
 .comment-section-heading {
@@ -1138,9 +1136,7 @@ h4 {
   font-family: var(--serif);
 }
 
-.form-card,
-.comment-edit-card,
-.thank-you-card {
+.comment-edit-card {
   background: #fff;
 }
 

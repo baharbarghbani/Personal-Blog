@@ -100,10 +100,5 @@ python manage.py migrate
 python manage.py createsuperuser
 ```
 
-Add the SMTP variables from `.env.example` separately when you are ready to
-enable the contact form. Never paste the Gmail App Password into GitHub.
-
-## Contact email
-
-Set the SMTP variables documented in `.env.example`. For Gmail, use an App
-Password rather than your normal account password.
+The Contact page displays the email and professional links stored in the
+Academic Profile. It does not submit a server-side form or require SMTP.

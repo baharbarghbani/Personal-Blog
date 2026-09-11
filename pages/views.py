@@ -1,18 +1,10 @@
-import logging
-from smtplib import SMTPException
 from pathlib import Path
 
-from django.contrib import messages
-from django.core.mail import BadHeaderError
 from django.http import FileResponse, Http404
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404, render
+from django.views.decorators.http import require_GET
 
-from .emails import send_contact_email
-from .forms import ContactForm
 from .models import Experience, Profile, Project, Research
-
-
-logger = logging.getLogger(__name__)
 
 
 def HomePage(request):
@@ -115,30 +107,6 @@ def download_cv(request):
     )
 
 
+@require_GET
 def Contact(request):
-    if request.method == "POST":
-        form = ContactForm(request.POST)
-        if form.is_valid():
-            try:
-                send_contact_email(
-                    name=form.cleaned_data["username"],
-                    sender_email=form.cleaned_data["email"],
-                    subject=form.cleaned_data["subject"],
-                    message=form.cleaned_data["message"],
-                )
-            except (BadHeaderError, OSError, SMTPException):
-                logger.exception("Contact email delivery failed")
-                messages.error(
-                    request,
-                    "We could not send your message right now. Please try again later.",
-                )
-            else:
-                return redirect("pages:thank-you")
-    else:
-        form = ContactForm()
-
-    return render(request, "pages/contact.html", {"form": form})
-
-
-def Thankyou(request):
-    return render(request, "pages/thank_you.html")
+    return render(request, "pages/contact.html")

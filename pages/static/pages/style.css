@@ -305,53 +305,12 @@ body {
 
 } */
 
-.form-card {
-  max-width: 720px;
-  padding: 32px;
-}
-
-.form-row {
-  display: grid;
-  grid-template-columns: 180px 1fr;
-  gap: 16px;
-  align-items: start;
-  margin-bottom: 20px;
-}
-
-.form-row label {
-  font-weight: 600;
-  padding-top: 8px;
-}
-
-.form-input textarea,
-.form-input input, 
-.form-input select {
-  width: 100%;
-  border-radius: 4px;
-  border: 1px solid var(--border);
-  font-size: 16px;
-  padding: 8px 16px;
-  background: #fafafa;
-}
-
-.form-input textarea{
-  min-height: 120px;
-  resize: vertical;
-}
-
 .input-wrap input:focus,
 .input-wrap textarea:focus,
 .input-wrap select:focus{
   border-color: var(--ring);
   box-shadow: 0 0 0 4px color-mix(in srgb, var(--ring) 20%, transparent);
   background: #fff;
-}
-
-.form-help{ 
-  display:block; 
-  margin-top:6px; 
-  color: var(--muted); 
-  font-size: 13px; 
 }
 
 .form-submit{
@@ -382,30 +341,6 @@ body {
 .form-btn:active{ 
   transform: translateY(1px); 
 }
-
-.thank-you-card{
-  max-width: 520px;
-  padding: 32px;
-  margin: 80px auto;
-  text-align: center;
-}
-.thank-you-card h1 {
-  color: var(--ring); 
-  margin-bottom: 16px;
-}
-.thank-you-card p {
-  font-size: 18px;
-  color: #555;
-  margin-bottom: 24px;
-}
-.btn-primary{
-  display: inline-block;
-  padding: 12px 20px;
-  text-decoration: none;
-  font-weight: bold;
-  transition: background-color .2s ease;
-}
-
 
 .about-me-btn{
   color: var(--ring);

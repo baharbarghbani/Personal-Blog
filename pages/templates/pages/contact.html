@@ -11,7 +11,7 @@
         <p class="page-lede">For research conversations, graduate opportunities, or thoughtful technical collaboration.</p>
     </div>
 </header>
-<section class="contact-layout">
+<section class="contact-layout contact-layout-direct">
     <div class="contact-note">
         <p class="eyebrow">Contact directly</p>
         <dl class="contact-links">
@@ -31,25 +31,7 @@
                 <div><dt>ORCID</dt><dd><a href="{{ site_profile.orcid_url }}" rel="noreferrer">Research identifier ↗</a></dd></div>
             {% endif %}
         </dl>
-        <p class="contact-guidance">A useful message includes a little context, what you would like to discuss, and any helpful timeframe.</p>
-    </div>
-    <div class="container form-card">
-        <form method="POST">
-            {% csrf_token %}
-            {% for field in form %}
-                <div class="form-row">
-                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                    <div class="form-input">
-                        {{ field }}
-                        {% if field.help_text %}<small class="form-help">{{ field.help_text }}</small>{% endif %}
-                        {% for error in field.errors %}<div class="form-error">{{ error }}</div>{% endfor %}
-                    </div>
-                </div>
-            {% endfor %}
-            <div class="form-submit">
-                <button type="submit" class="form-btn">Send message</button>
-            </div>
-        </form>
+        <p class="contact-guidance">Email is the best way to reach me. A useful message includes a little context, what you would like to discuss, and any helpful timeframe.</p>
     </div>
 </section>
 {% endblock %}

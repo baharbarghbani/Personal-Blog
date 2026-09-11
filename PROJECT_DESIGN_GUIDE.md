@@ -60,7 +60,6 @@ flowchart LR
     BT --> H
     UT --> H
 
-    PV --> SMTP[SMTP email server]
     H --> V
 ```
 
@@ -72,7 +71,7 @@ The important layers are:
 | URL routing | Maps a URL to a Python view | `pages/urls.py`, `blog/urls.py`, `personal_blog/urls.py` |
 | Models | Describe data and business rules | `pages/models.py`, `blog/models.py` |
 | Views | Process requests and choose responses | `pages/views.py`, `blog/views.py`, `users/views.py` |
-| Forms | Validate submitted user data | `pages/forms.py`, `blog/forms.py`, `users/forms.py` |
+| Forms | Validate submitted user data | `blog/forms.py`, `users/forms.py` |
 | Templates | Turn context data into HTML | `templates/base.html`, application `templates/` directories |
 | Static files | CSS and repository-owned images | `pages/static/`, `users/static/` |
 | Admin configuration | Controls the private content-management UI | `pages/admin.py`, `blog/admin.py` |
@@ -87,7 +86,7 @@ The important layers are:
 personal-blog/
 ├── manage.py                     # Entry point for Django management commands
 ├── personal_blog/                # Project-wide configuration
-│   ├── settings.py               # Apps, database, templates, email, files, security
+│   ├── settings.py               # Apps, database, templates, files, security
 │   ├── urls.py                   # Root URL router
 │   ├── wsgi.py                   # Production WSGI application used by Gunicorn
 │   └── asgi.py                   # ASGI entry point, currently not used by Gunicorn
@@ -95,8 +94,6 @@ personal-blog/
 │   ├── models.py                 # Profile, Research, Project, Experience
 │   ├── views.py                  # Portfolio page request handlers
 │   ├── urls.py                   # Portfolio routes
-│   ├── forms.py                  # ContactForm validation
-│   ├── emails.py                 # Contact email construction and delivery
 │   ├── context_processors.py     # Makes site_profile available to all templates
 │   ├── admin.py                  # Portfolio admin panels
 │   ├── migrations/               # Portfolio database schema history
@@ -205,7 +202,6 @@ Removing Login and Sign up from the header only removes public navigation links.
 | `/experience/` | `pages:experience` | `experience` | `pages/experience.html` |
 | `/cv/` | `pages:cv-download` | `download_cv` | Downloadable PDF response |
 | `/contact/` | `pages:contact` | `Contact` | `pages/contact.html` |
-| `/thank_you/` | `pages:thank-you` | `Thankyou` | `pages/thank_you.html` |
 
 ### 5.3 Blog routes
 
@@ -453,36 +449,11 @@ Research, Project, and Experience use `is_visible`. Turning it off is preferable
 
 The public CV navigation link can therefore remain visible from the first deployment. Uploading a newer PDF in Admin under **Academic profile → Curriculum vitae** overrides the bundled copy without a code deployment. If no uploaded or bundled PDF exists, the view still returns 404 rather than failing unexpectedly.
 
-### 7.4 Contact form and email
+### 7.4 Direct contact page
 
-```mermaid
-sequenceDiagram
-    participant V as Visitor
-    participant C as Contact view
-    participant F as ContactForm
-    participant E as send_contact_email
-    participant S as SMTP server
+The Contact page is intentionally read-only. Its view is protected by `@require_GET`, so a crafted POST request receives `405 Method Not Allowed` rather than being processed. No form, SMTP credentials, email backend, or contact-submission storage is involved.
 
-    V->>C: POST name, email, subject, message
-    C->>F: Validate submitted values
-    alt invalid
-        F-->>V: Render form with field errors
-    else valid
-        C->>E: Pass cleaned_data
-        E->>S: Send EmailMessage
-        alt delivery succeeds
-            C-->>V: Redirect to thank-you page
-        else expected SMTP/network error
-            C-->>V: Keep form and show error message
-        end
-    end
-```
-
-The visitor's email becomes `reply_to`, while the configured site email remains the sender. This improves deliverability and lets the site owner press Reply.
-
-Contact submissions are not stored in PostgreSQL. If email delivery fails, no persistent copy is retained.
-
-The public contact panel and footer read email, GitHub, LinkedIn, Scholar, and ORCID from Profile via `site_profile`.
+The public contact panel and footer read email, GitHub, LinkedIn, Scholar, and ORCID from Profile via `site_profile`. The email link uses `mailto:`, which asks the visitor's device to open its configured email application.
 
 ---
 
@@ -707,7 +678,6 @@ Two admin modules currently assign global admin titles. Since application import
 ```python
 DEBUG = env.bool("DEBUG", default=True)
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[...])
-EMAIL_PORT = env.int("EMAIL_PORT", default=587)
 ```
 
 Production should provide variables through Liara, not a committed `.env`.
@@ -853,15 +823,9 @@ Replace `pages/static/images/laptop-me.jpg` while keeping the filename, or updat
 
 Change displayed size and cropping in `academic.css`, then inspect desktop and mobile. Image pixel dimensions affect download size; CSS dimensions affect displayed size.
 
-### 16.7 Change email behavior
+### 16.7 Change contact information
 
-- Field labels and validation: `pages/forms.py`.
-- Success/failure request flow: `pages/views.py`.
-- Email subject/body/recipients: `pages/emails.py`.
-- SMTP credentials and provider: environment variables/settings.
-- Visual layout: `pages/templates/pages/contact.html` and CSS.
-
-Never place an SMTP password in Python code or templates.
+Edit email and professional profile URLs through **Admin → Academic profile**. The Contact page and footer both receive the same `site_profile` object, so one Admin edit updates both locations. Layout and explanatory text live in `pages/templates/pages/contact.html` and its CSS. Reintroducing a server-side contact form would require a deliberate form, delivery provider, abuse protection, failure behavior, and tests rather than only adding HTML fields.
 
 ### 16.8 Change comment permissions
 
@@ -921,7 +885,7 @@ python manage.py collectstatic --no-input
 
 ### What the tests currently cover
 
-- contact validation, email delivery, and failure handling;
+- direct contact links, absence of a contact form, and rejection of POST submissions;
 - CV-derived profile/content seeding, portfolio visibility, homepage feature selection, slugs, CV download, Admin access;
 - academic navigation order and hidden public account links;
 - Experience page visibility and contact profile links;
@@ -1027,16 +991,15 @@ These are not all urgent, but they are useful architectural context.
 
 1. **Portrait management:** the portrait is hardcoded static content. Add an optional Profile `ImageField` if you want to replace it through Admin.
 2. **Registration exposure:** Login/Sign up links are hidden, but `/register/` remains public. Disable registration if visitor accounts are no longer required.
-3. **Spam protection:** comments and the contact form accept public submissions. Add throttling, honeypot protection, or a privacy-respecting CAPTCHA before meaningful traffic.
-4. **Email durability:** failed contact submissions are not stored. Consider a small ContactSubmission model or a transactional email provider if losing a message would matter.
-5. **Media serving:** Django's development-style media response is simple but not ideal at scale. Move uploads to object storage when needed.
-6. **Unique email guarantee:** enforce a reliable unique-email design before expanding user accounts.
-7. **CSS consolidation:** merge old `style.css` rules with `academic.css` after the visual design stabilizes.
-8. **Naming consistency:** view functions such as `HomePage`, `Contact`, and `Thankyou` work, but lowercase snake_case would match normal Python conventions.
-9. **Admin branding:** configure global admin titles once instead of in both `pages/admin.py` and `blog/admin.py`.
-10. **Documentation drift:** deployment instructions must match the actual Liara disk mount and build lifecycle whenever those settings change.
-11. **Observability:** add structured error monitoring before relying on the contact form or comments for important communication.
-12. **Content maintenance:** keep outcomes and dates current through Admin, replace the bundled CV when it changes, and add Scholar/ORCID only when those profiles are useful.
+3. **Spam protection:** comments still accept public submissions. Add throttling, honeypot protection, or a privacy-respecting CAPTCHA before meaningful traffic.
+4. **Media serving:** Django's development-style media response is simple but not ideal at scale. Move uploads to object storage when needed.
+5. **Unique email guarantee:** enforce a reliable unique-email design before expanding user accounts.
+6. **CSS consolidation:** merge old `style.css` rules with `academic.css` after the visual design stabilizes.
+7. **Naming consistency:** view functions such as `HomePage` and `Contact` work, but lowercase snake_case would match normal Python conventions.
+8. **Admin branding:** configure global admin titles once instead of in both `pages/admin.py` and `blog/admin.py`.
+9. **Documentation drift:** deployment instructions must match the actual Liara disk mount and build lifecycle whenever those settings change.
+10. **Observability:** add structured error monitoring before relying on comments for important communication.
+11. **Content maintenance:** keep outcomes and dates current through Admin, replace the bundled CV when it changes, and add Scholar/ORCID only when those profiles are useful.
 
 ---
 
@@ -1054,7 +1017,7 @@ Create a hidden Experience, verify it is absent publicly, turn visibility on, ma
 
 ### Exercise 3: trace a form
 
-Submit an invalid Contact form. Follow `request.POST` into `ContactForm`, field errors back into the same template, and the valid branch into `send_contact_email()`.
+Submit an invalid blog comment. Follow `request.POST` into `CommentForm`, field errors back into the post-detail template, and the valid branch into the new Comment row.
 
 ### Exercise 4: trace permissions
 

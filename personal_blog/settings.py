@@ -195,29 +195,6 @@ MEDIA_ROOT = Path(env("MEDIA_ROOT", default=str(BASE_DIR / "media")))
 if not MEDIA_ROOT.is_absolute():
     MEDIA_ROOT = BASE_DIR / MEDIA_ROOT
 SERVE_MEDIA = env.bool("SERVE_MEDIA", default=DEBUG)
-EMAIL_BACKEND = env(
-    "EMAIL_BACKEND",
-    default="django.core.mail.backends.console.EmailBackend",
-)
-EMAIL_HOST = env("EMAIL_HOST", default="smtp.gmail.com")
-EMAIL_PORT = env.int("EMAIL_PORT", default=587)
-EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS", default=True)
-EMAIL_USE_SSL = env.bool("EMAIL_USE_SSL", default=False)
-EMAIL_HOST_USER = env("EMAIL_HOST_USER", default="")
-EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default="")
-EMAIL_TIMEOUT = env.int("EMAIL_TIMEOUT", default=10)
-DEFAULT_FROM_EMAIL = env(
-    "DEFAULT_FROM_EMAIL",
-    default=EMAIL_HOST_USER or "webmaster@localhost",
-)
-CONTACT_RECEIVER_EMAIL = env(
-    "CONTACT_RECEIVER_EMAIL",
-    default="bahar.brqbni@gmail.com",
-)
-CONTACT_EMAIL_SUBJECT_PREFIX = env(
-    "CONTACT_EMAIL_SUBJECT_PREFIX",
-    default="[Personal Blog]",
-)
 
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "pages:home"

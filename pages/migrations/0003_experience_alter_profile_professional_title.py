@@ -19,7 +19,7 @@ def populate_portfolio_from_cv(apps, schema_editor):
         profile.institution = "Sharif University of Technology"
         profile.education_details = (
             "Expected graduation: July 2028\n"
-            "Overall GPA: 18.33/20\n"
+            "Overall GPA: 18.58/20\n"
             "Major GPA: 18.89/20"
         )
         profile.location = "Tehran, Iran"
@@ -30,7 +30,7 @@ def populate_portfolio_from_cv(apps, schema_editor):
         profile.about = (
             "I am a B.Sc. student in Computer Engineering at Sharif University of "
             "Technology, with an expected graduation date of July 2028. My overall "
-            "GPA is 18.33/20 and my major GPA is 18.89/20.\n\n"
+            "GPA is 18.58/20 and my major GPA is 18.89/20.\n\n"
             "My current research focuses on computer architecture and performance "
             "evaluation. At Sabanci University, I develop reproducible C++ "
             "microbenchmarks and supporting infrastructure for studying compute, "

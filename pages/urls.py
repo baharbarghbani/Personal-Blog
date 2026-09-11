@@ -12,5 +12,4 @@ urlpatterns = [
     path("experience/", views.experience, name="experience"),
     path("cv/", views.download_cv, name="cv-download"),
     path("contact/", views.Contact, name='contact'),
-    path("thank_you/", views.Thankyou, name='thank-you'),
 ]
