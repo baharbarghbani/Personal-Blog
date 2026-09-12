@@ -617,13 +617,13 @@ Change `width`, `height`, and `flex-basis` together to resize it. A smaller mobi
 Cropping is controlled by:
 
 ```css
-height: 220%;
+height: 240%;
 top: 50%;
 left: 50%;
-transform: translate(-44%, -37%);
+transform: translate(-53%, -45%);
 ```
 
-- `height` controls zoom; increase `220%` for a tighter face crop.
+- `height` controls zoom; increase `240%` for a tighter face crop.
 - `top` and `left` place the image's anchor at the center of the circular frame.
 - The two negative `translate` percentages identify the face's approximate horizontal and vertical position inside the original photograph.
 - Increase the magnitude of the first percentage when the face is farther right in the source image; increase the magnitude of the second when it is farther down.

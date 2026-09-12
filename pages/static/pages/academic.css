@@ -88,8 +88,8 @@ a {
   display: block;
   width: auto;
   max-width: none;
-  height: 220%;
-  transform: translate(-44%, -37%);
+  height: 240%;
+  transform: translate(-53%, -45%);
 }
 
 .brand-name {
@@ -1008,11 +1008,6 @@ h4 {
 .contact-note a {
   color: var(--academic-teal);
   font-weight: 700;
-}
-
-.contact-guidance {
-  margin-top: 28px;
-  font-size: 14px;
 }
 
 .comment-section-heading {
