@@ -29,7 +29,7 @@ class Profile(models.Model):
     professional_title = models.CharField(
         max_length=180,
         blank=True,
-        default="Computer Engineering · Computer Systems & Architecture",
+        default="",
     )
     major = models.CharField(max_length=180, blank=True)
     institution = models.CharField(max_length=180, blank=True)

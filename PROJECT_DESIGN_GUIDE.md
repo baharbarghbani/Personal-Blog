@@ -306,7 +306,7 @@ erDiagram
 
 `Profile` stores the site's identity and reusable personal information:
 
-- name and professional title;
+- name and an optional professional title field retained for future use;
 - major, institution, and location;
 - expected graduation and GPA facts;
 - short homepage biography and longer About text;
@@ -412,19 +412,20 @@ The current portfolio migration also updates the singleton Profile and creates t
 `HomePage` builds three visible querysets: Research, Project, and Experience. For each type:
 
 1. Start with `is_visible=True`.
-2. Prefer up to three `featured=True` objects when any exist.
-3. Otherwise show the first three visible objects according to model ordering.
+2. Prefer up to two `featured=True` objects when any exist.
+3. Otherwise show the first two visible objects according to model ordering.
 
 The view passes those objects and the Profile into `pages/home.html`.
 
 The homepage order is:
 
-1. academic introduction;
+1. compact academic introduction with name, degree, institution, biography, and two primary actions;
 2. selected research;
 3. featured projects;
 4. selected experience, only when visible experience exists;
-5. optional personal note;
-6. contact callout.
+5. optional personal note.
+
+The professional title, research-interest tags, extra CV action, and contact callout are intentionally omitted from the homepage. The navigation already exposes CV and Contact, while the About page contains the full research-interest list. This keeps the homepage focused and avoids repeating the same information.
 
 Writing remains implemented under `/blog/posts/`, but it is intentionally absent from the public header and homepage until there are polished posts.
 
@@ -616,17 +617,16 @@ Change `width`, `height`, and `flex-basis` together to resize it. A smaller mobi
 Cropping is controlled by:
 
 ```css
-object-fit: cover;
-object-position: 44% center;
-transform: translate(6%, 13%) scale(2.25);
-transform-origin: 44% 37%;
+height: 220%;
+top: 50%;
+left: 50%;
+transform: translate(-44%, -37%);
 ```
 
-- `cover` fills the box and crops overflow.
-- `object-position` chooses the starting horizontal crop.
-- `scale(...)` zooms toward the face; increase the number for a tighter crop.
-- `translate(x, y)` moves the visible crop right/down; use negative values to move it left/up.
-- `transform-origin` marks the point the zoom should stay centered around.
+- `height` controls zoom; increase `220%` for a tighter face crop.
+- `top` and `left` place the image's anchor at the center of the circular frame.
+- The two negative `translate` percentages identify the face's approximate horizontal and vertical position inside the original photograph.
+- Increase the magnitude of the first percentage when the face is farther right in the source image; increase the magnitude of the second when it is farther down.
 
 ### 11.3 Responsive layout
 

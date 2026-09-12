@@ -18,15 +18,15 @@ def HomePage(request):
     context = {
         "profile": Profile.objects.first(),
         "featured_research": (
-            featured_research[:3] if featured_research.exists() else visible_research[:3]
+            featured_research[:2] if featured_research.exists() else visible_research[:2]
         ),
         "featured_projects": (
-            featured_projects[:3] if featured_projects.exists() else visible_projects[:3]
+            featured_projects[:2] if featured_projects.exists() else visible_projects[:2]
         ),
         "featured_experiences": (
-            featured_experiences[:3]
+            featured_experiences[:2]
             if featured_experiences.exists()
-            else visible_experiences[:3]
+            else visible_experiences[:2]
         ),
     }
     return render(request, "pages/home.html", context)

@@ -6,11 +6,7 @@
 {% block body %}
 <section class="academic-hero">
     <div class="hero-copy">
-        <p class="eyebrow">Research · Projects · Experience</p>
         <h1>{{ profile.full_name|default:"Bahar Barghbani" }}</h1>
-        {% if profile.professional_title %}
-            <p class="hero-role">{{ profile.professional_title }}</p>
-        {% endif %}
         {% if profile.major or profile.institution %}
             <p class="academic-line">
                 {% if profile.major %}<span>{{ profile.major }}</span>{% endif %}
@@ -24,18 +20,7 @@
         <div class="hero-actions">
             <a class="button button-primary" href="{% url 'pages:research' %}">Explore my research</a>
             <a class="button button-secondary" href="{% url 'pages:projects' %}">View projects</a>
-            <a class="text-link" href="{% url 'pages:cv-download' %}">Download CV <span aria-hidden="true">↓</span></a>
         </div>
-        {% if profile.interest_list %}
-            <div class="interest-block">
-                <span class="interest-label">Research interests</span>
-                <ul class="tag-list" aria-label="Research interests">
-                    {% for interest in profile.interest_list %}
-                        <li>{{ interest }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
-        {% endif %}
     </div>
 </section>
 
@@ -142,12 +127,4 @@
 </section>
 {% endif %}
 
-<section class="contact-callout">
-    <div>
-        <p class="eyebrow">Let’s connect</p>
-        <h2>Interested in my work?</h2>
-        <p>I’m always glad to discuss research questions, thoughtful projects, and opportunities to collaborate.</p>
-    </div>
-    <a class="button button-light" href="{% url 'pages:contact' %}">Start a conversation</a>
-</section>
 {% endblock %}

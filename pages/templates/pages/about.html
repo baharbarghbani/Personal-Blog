@@ -16,7 +16,6 @@
 <section class="about-layout">
     <div class="about-story">
         <h2>{{ profile.full_name|default:"Bahar Barghbani" }}</h2>
-        {% if profile.professional_title %}<p class="about-role">{{ profile.professional_title }}</p>{% endif %}
         <div class="prose">
             {{ profile.about|default:"This website began as my first Django project and is growing into a home for my academic work, software projects, and writing."|linebreaks }}
         </div>

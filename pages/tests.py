@@ -13,14 +13,14 @@ class CVPortfolioContentTests(TestCase):
     def test_profile_contains_cv_positioning_and_contact_details(self):
         profile = Profile.objects.get(full_name="Bahar Barghbani")
 
-        self.assertEqual(
-            profile.professional_title,
-            "Computer Engineering · Computer Systems & Architecture",
-        )
+        self.assertEqual(profile.professional_title, "")
         self.assertEqual(profile.institution, "Sharif University of Technology")
         self.assertIn("18.58/20", profile.about)
+        self.assertIn("major GPA is 19.13/20", profile.about)
         self.assertIn("National Physics Olympiad", profile.about)
+        self.assertIn("Expected graduation: July 2027", profile.education_detail_list)
         self.assertIn("Overall GPA: 18.58/20", profile.education_detail_list)
+        self.assertIn("Major GPA: 19.13/20", profile.education_detail_list)
         self.assertTrue(any("top 0.4%" in award for award in profile.award_list))
         self.assertIn("English: Professional proficiency", profile.language_list)
         self.assertEqual(profile.email, "bahar.brqbni@gmail.com")
@@ -114,9 +114,9 @@ class AcademicPortfolioTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, self.profile.full_name)
-        self.assertContains(response, self.profile.professional_title)
+        self.assertNotContains(response, self.profile.professional_title)
         self.assertContains(response, self.profile.major)
-        self.assertContains(response, "Human-centered systems")
+        self.assertNotContains(response, "Human-centered systems")
         self.assertContains(response, self.research.title)
         self.assertContains(response, self.project.title)
         self.assertContains(response, self.experience.role)
@@ -124,6 +124,10 @@ class AcademicPortfolioTests(TestCase):
         self.assertNotContains(response, self.hidden_project.title)
         self.assertNotContains(response, self.hidden_experience.role)
         self.assertNotContains(response, "Recent writing")
+        self.assertNotContains(response, "Interested in my work?")
+        self.assertEqual(len(response.context["featured_research"]), 2)
+        self.assertEqual(len(response.context["featured_projects"]), 2)
+        self.assertEqual(len(response.context["featured_experiences"]), 2)
 
     def test_portrait_is_a_compact_shared_header_avatar(self):
         homepage = self.client.get(reverse("pages:home"))
@@ -156,7 +160,7 @@ class AcademicPortfolioTests(TestCase):
         self.assertNotContains(response, ">Login<")
         self.assertNotContains(response, ">Sign up<")
         self.assertNotContains(response, ">Writing<")
-        self.assertContains(
+        self.assertNotContains(
             response,
             "Computer Engineering · Computer Systems &amp; Architecture",
         )
