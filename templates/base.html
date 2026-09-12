@@ -20,8 +20,13 @@
     <div class="site-shell">
         <header class="site-header">
             <a class="site-brand" href="{% url 'pages:home' %}" aria-label="Home">
-                <span class="brand-name">{{ site_profile.full_name|default:"Bahar Barghbani" }}</span>
-                <span class="brand-label">{{ site_profile.professional_title|default:"Computer Engineering · Computer Systems & Architecture" }}</span>
+                <span class="site-avatar" aria-hidden="true">
+                    <img src="{% static 'images/laptop-me.jpg' %}" alt="">
+                </span>
+                <span class="brand-copy">
+                    <span class="brand-name">{{ site_profile.full_name|default:"Bahar Barghbani" }}</span>
+                    <span class="brand-label">{{ site_profile.professional_title|default:"Computer Engineering · Computer Systems & Architecture" }}</span>
+                </span>
             </a>
             <nav class="primary-nav" aria-label="Primary navigation">
                 <a class="nav-link" href="{% url 'pages:research' %}">Research</a>

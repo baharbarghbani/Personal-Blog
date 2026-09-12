@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% load static %}
 
 {% block title %}{{ profile.full_name|default:"Bahar Barghbani" }} · Research & Projects{% endblock %}
 {% block meta_description %}Explore the research, projects, and experience of {{ profile.full_name|default:"Bahar Barghbani" }} in computer systems and architecture.{% endblock %}
@@ -37,11 +36,6 @@
                 </ul>
             </div>
         {% endif %}
-    </div>
-    <div class="hero-portrait">
-        <div class="portrait-accent" aria-hidden="true"></div>
-        <img src="{% static 'images/laptop-me.jpg' %}" alt="Portrait of {{ profile.full_name|default:'Bahar Barghbani' }}">
-        {% if profile.location %}<p class="portrait-caption">Based in {{ profile.location }}</p>{% endif %}
     </div>
 </section>
 

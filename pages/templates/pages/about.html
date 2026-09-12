@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% load static %}
 
 {% block title %}About · {{ profile.full_name|default:"Bahar Barghbani" }}{% endblock %}
 {% block meta_description %}Academic background, interests, and personal story of {{ profile.full_name|default:"Bahar Barghbani" }}.{% endblock %}
@@ -15,9 +14,6 @@
 </header>
 
 <section class="about-layout">
-    <div class="about-photo">
-        <img src="{% static 'images/laptop-me.jpg' %}" alt="Portrait of {{ profile.full_name|default:'Bahar Barghbani' }}">
-    </div>
     <div class="about-story">
         <h2>{{ profile.full_name|default:"Bahar Barghbani" }}</h2>
         {% if profile.professional_title %}<p class="about-role">{{ profile.professional_title }}</p>{% endif %}

@@ -590,38 +590,43 @@ When selectors have equal specificity, the later stylesheet wins. This is useful
 
 Changing a token updates many components consistently. Use tokens for brand-level changes; use a component selector for a local adjustment.
 
-### 11.2 Portrait source and size
+### 11.2 Portrait source, circular frame, and crop
 
-The homepage and About page currently use the repository-owned file:
+The shared header uses the repository-owned file:
 
 ```text
 pages/static/images/laptop-me.jpg
 ```
 
-They do not use an admin-uploaded Profile image.
+It does not use an admin-uploaded Profile image. The portrait appears once, inside the Home link at the left of the navigation header, so pages do not repeat a large portrait.
 
-Homepage display width is controlled by `.hero-portrait`; About-page presentation is controlled by `.about-photo` and `.about-photo img`.
+The circular frame size is controlled by `.site-avatar`:
 
 ```css
-.hero-portrait {
-  width: min(100%, 430px);
+.site-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  overflow: hidden;
 }
 ```
 
-Reduce `430px` to reduce the visual size. The mobile override under `@media (max-width: 720px)` must be adjusted separately.
+Change `width`, `height`, and `flex-basis` together to resize it. A smaller mobile size is defined under `@media (max-width: 480px)`.
 
 Cropping is controlled by:
 
 ```css
-aspect-ratio: 4 / 5;
 object-fit: cover;
-object-position: 54% center;
+object-position: 44% center;
+transform: translate(6%, 13%) scale(2.25);
+transform-origin: 44% 37%;
 ```
 
 - `cover` fills the box and crops overflow.
-- `contain` shows the whole image but can leave empty space.
-- `object-position` changes which portion remains visible.
-- `aspect-ratio: auto` follows the original photograph's shape.
+- `object-position` chooses the starting horizontal crop.
+- `scale(...)` zooms toward the face; increase the number for a tighter crop.
+- `translate(x, y)` moves the visible crop right/down; use negative values to move it left/up.
+- `transform-origin` marks the point the zoom should stay centered around.
 
 ### 11.3 Responsive layout
 
@@ -819,9 +824,9 @@ Object order inside Research, Project, and Experience comes from model `Meta.ord
 
 ### 16.6 Change the portrait
 
-Replace `pages/static/images/laptop-me.jpg` while keeping the filename, or update its path in both `home.html` and `about.html`.
+Replace `pages/static/images/laptop-me.jpg` while keeping the filename, or update its path in `templates/base.html`.
 
-Change displayed size and cropping in `academic.css`, then inspect desktop and mobile. Image pixel dimensions affect download size; CSS dimensions affect displayed size.
+Change `.site-avatar` and `.site-avatar img` in `academic.css`, then inspect desktop and mobile. Image pixel dimensions affect download size; CSS dimensions affect displayed size.
 
 ### 16.7 Change contact information
 

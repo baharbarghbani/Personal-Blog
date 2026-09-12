@@ -125,6 +125,15 @@ class AcademicPortfolioTests(TestCase):
         self.assertNotContains(response, self.hidden_experience.role)
         self.assertNotContains(response, "Recent writing")
 
+    def test_portrait_is_a_compact_shared_header_avatar(self):
+        homepage = self.client.get(reverse("pages:home"))
+        about_page = self.client.get(reverse("pages:about"))
+
+        self.assertContains(homepage, 'class="site-avatar"')
+        self.assertContains(homepage, "laptop-me.")
+        self.assertNotContains(homepage, 'class="hero-portrait"')
+        self.assertNotContains(about_page, 'class="about-photo"')
+
     def test_public_navigation_has_academic_order_without_account_links(self):
         self.profile.professional_title = (
             "Computer Engineering · Computer Systems & Architecture"
